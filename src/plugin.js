@@ -1,10 +1,4 @@
-import d3Shape from 'd3-shape';
-import color from 'sketch-color';
-
-import _ from 'lodash';
-
-import {createAlert, createSelect, createLabel} from './utils';
-
+import {createSelect, createAlert, createLabel, selectOcoFile, parentArtboardForObject, generateNameLookup, getStyleColor} from './utils';
 var oco = require('opencolor');
 
 export const HKSketchFusionExtension = {
@@ -16,66 +10,19 @@ export const HKSketchFusionExtension = {
   identifier: "tools.opencolor.sketch.opencolor",
 
   commands: {
-    sampleCommand: {
+    importAsDocumentColorsCommand: {
       name: 'Import as Document colors',
       run(context) {
 
         //create file enumerator for presetsPath
-        var url = NSURL.fileURLWithPath(NSHomeDirectory() + "/Library/Colors/OpenColorCache");
-        var enumerator = NSFileManager.defaultManager().enumeratorAtURL_includingPropertiesForKeys_options_errorHandler(url, [NSURLIsDirectoryKey, NSURLNameKey, NSURLPathKey], NSDirectoryEnumerationSkipsHiddenFiles, null);
-        var fileUrl;
-        var ocoFiles = [];
-        while(fileUrl = enumerator.nextObject()) {
-
-            //make sure that file is JSON
-            if(fileUrl.pathExtension().isEqualToString('oco')) {
-
-                //make sure it's a file
-                var isDir = MOPointer.alloc().init();
-                fileUrl.getResourceValue_forKey_error(isDir, NSURLIsDirectoryKey, null);
-                if(!Number(isDir.value())) {
-
-                    //get relative path for preset
-                    var presetPath = String(fileUrl.path());
-                    var pathParts = presetPath.split("/");
-                    var fileName = pathParts[pathParts.length - 1];
-                    //create preset structure
-                    var ocoFile = {
-                        name: fileName,
-                        path: presetPath
-                    };
-
-                    //add item
-                    ocoFiles.push(ocoFile);
-                }
-            }
-        }
-
-        var labels = ocoFiles.map(ocoFile => ocoFile.name);
-
-        var listView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,50));
-        var alert = createAlert("Open Color Tools", "Select a palette to import as document colors");
-        var ocoSelect = createSelect(labels, 0, NSMakeRect(0, 0, 300, 25));
-
-        listView.addSubview(createLabel('Please select a palette', NSMakeRect(0, 30, 300, 20), 12));
-
-        listView.addSubview(ocoSelect);
-        alert.addAccessoryView(listView);
-
-        alert.addButtonWithTitle("Import");
-        alert.addButtonWithTitle("Cancel");
-
-        var responseCode = alert.runModal();
-        if(responseCode != '1000') {
-          context.document.showMessage('Canceld');
-          return;
-        }
-
         // clear them
-        context.document.documentData().assets().setColors(MSArray.dataArrayWithArray([]));
-        var index = ocoSelect.indexOfSelectedItem();
+        var result = selectOcoFile("Select a palette to import as document colors", "Import");
+        if (!result) { return; }
 
-        var ocoString = NSString.stringWithContentsOfFile(ocoFiles[index].path);
+        context.document.documentData().assets().setColors(MSArray.dataArrayWithArray([]));
+
+
+        var ocoString = NSString.stringWithContentsOfFile(result);
         var tree = oco.parse(ocoString + "\n");
         var colors = [];
         function traverseTree(subtree) {
@@ -92,6 +39,50 @@ export const HKSketchFusionExtension = {
         var msColors = MSArray.dataArrayWithArray(colors);
         context.document.documentData().assets().setColors(msColors);
         appController.refreshCurrentDocument();
+      }
+    },
+    connectArtboardWithPalette: {
+      name: 'Connect Artboard with Palette',
+      run(context) {
+        var command = context.command;
+        let layer = context.selection.firstObject();
+        if (!layer) { return; }
+        var artboard = parentArtboardForObject(layer);
+
+        if (!artboard) { return; }
+        var value = command.valueForKey_onLayer('ocoPalette', artboard);
+        var result = selectOcoFile("Select a palette to connect to the current Artboard", "Connect", "" + value, true);
+        if (!result) { return; }
+
+        command.setValue_forKey_onLayer(String(result), 'ocoPalette', artboard);
+
+      }
+    },
+    identifyColor: {
+      name: 'Identify Color',
+      run(context) {
+        const styleTypes = ['fill', 'border', 'shadow', 'innerShadow'];
+        var command = context.command;
+        let layer = context.selection.firstObject();
+        if (!layer) { return; }
+        var artboard = parentArtboardForObject(layer);
+        if (!artboard) { return; }
+        var ocoPalettePath = command.valueForKey_onLayer('ocoPalette', artboard);
+        var ocoString = NSString.stringWithContentsOfFile(ocoPalettePath);
+        var tree = oco.parse(ocoString + "\n");
+        var nameLookup = generateNameLookup(tree);
+        var info = [];
+        styleTypes.forEach((type) => {
+          var color = getStyleColor(layer, type);
+          if (nameLookup[color]) {
+            info.push(`${type}: ${nameLookup[color].join(", ")} `);
+          }
+        });
+        if (info.length > 0) {
+          context.document.showMessage(info.join(", "));
+        } else {
+          context.document.showMessage("No color identified");
+        }
       }
     }
   }
