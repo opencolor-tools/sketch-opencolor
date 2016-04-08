@@ -1,0 +1,35 @@
+Brand Colors:
+  oct/:
+    view: stretched
+    showColorInfo: true
+    showColorValue: false
+  Deep Blue: #1A237E
+  Funky Orange: #FF7043
+Blues:
+  oct/view: minimal
+  Eighthundred: #1565C0
+  Fifty: #E3F2FD
+Greys:
+  oct/view: minimal
+  Off-white: #FDFDFD
+  Subtle Grey: #FAFAFA
+  Medium Grey: #9E9E9E
+  Dark Grey: #616161
+Day Theme:
+  oct/:
+    view: list
+    swatchShape: RECT
+    backgroundColor: =Background
+  Background: =Greys.Subtle Grey
+  Header Background: =Greys.Off-white
+  Primary Text: =Brand Colors.Deep Blue
+  Primary Text Pressed: =Brand Colors.Funky Orange
+Night Theme:
+  oct/:
+    view: list
+    swatchShape: RECT
+    backgroundColor: =Background
+  Background: =Blues.Eighthundred
+  Header Background: =Brand Colors.Deep Blue
+  Primary Text: =Blues.Fifty
+  Primary Text Pressed: =Brand Colors.Funky Orange
