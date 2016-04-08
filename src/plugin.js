@@ -66,20 +66,34 @@ export const HKSketchFusionExtension = {
         let layer = context.selection.firstObject();
         if (!layer) { return; }
         var artboard = parentArtboardForObject(layer);
-        if (!artboard) { return; }
+        if (!artboard) { 
+          context.document.showMessage('⛈ The layer needs to be part of an artboard');
+          return;
+        }
         var ocoPalettePath = command.valueForKey_onLayer('ocoPalette', artboard);
+        if(!ocoPalettePath) {
+          context.document.showMessage('⛈ Connect Artboard with Palette, first.');
+          return;
+        }
         var ocoString = NSString.stringWithContentsOfFile(ocoPalettePath);
         var tree = oco.parse(ocoString + "\n");
         var nameLookup = generateNameLookup(tree);
         var info = [];
-        styleTypes.forEach((type) => {
-          var color = getStyleColor(layer, type);
+        if(layer.isKindOfClass(MSTextLayer.class())) {
+          var color = '#' + layer.textColor().hexValue();
           if (nameLookup[color]) {
-            info.push(`${type}: ${nameLookup[color].join(", ")} `);
+            info.push(`type: ${nameLookup[color].join(", ")} `);
           }
-        });
+        } else {
+          styleTypes.forEach((type) => {
+            var color = getStyleColor(layer, type);
+            if (nameLookup[color]) {
+              info.push(`${type}: ${nameLookup[color].join(", ")} `);
+            }
+          });
+        }
         if (info.length > 0) {
-          context.document.showMessage(info.join(", "));
+          context.document.showMessage('🌈 ' + info.join(", "));
         } else {
           context.document.showMessage("No color identified");
         }
