@@ -1,3 +1,12 @@
+export function arrayify(items) {
+  var length = items.count();
+  var jsArray = [];
+  while (length--) {
+    jsArray.push(items.objectAtIndex(length));
+  }
+  return jsArray;
+}
+
 export function bezierPathFromSVGPath(path) {
   const isClosed = MOPointer.alloc().init();
 
@@ -141,6 +150,22 @@ export function generateNameLookup(ocoTree) {
         name: entry.name,
         isReference: isReference
       });
+    }
+  });
+  return colors;
+}
+
+export function generateColorLookup(ocoTree) {
+  var colors = {};
+  traverseTree(ocoTree, [], function(path, entry, isReference) {
+    if (entry.type === 'Color') {
+      var value = entry.get('rgb').value;
+      var dotPath = path.join(".") + "." + entry.name;
+      colors[dotPath] = {
+        value: value,
+        name: entry.name,
+        isReference: isReference
+      }
     }
   });
   return colors;
