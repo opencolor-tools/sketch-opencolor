@@ -14,6 +14,17 @@ export function createSelect(items, selectedIndex, frame) {
   return select;
 }
 
+export function createComboBox(items, selectedIndex, frame, pullsDown) {
+
+  var select = NSComboBox.alloc().initWithFrame(frame);
+  select.numberOfVisibleItems = 12;
+  select.completes = true;
+
+  select.addItemsWithObjectValues(items);
+  select.selectItemAtIndex(selectedIndex);
+  return select;
+}
+
 export function createAlert(title, message, iconFilePath) {
 
   var alert = COSAlertWindow.new();
@@ -121,11 +132,15 @@ export function parentArtboardForObject(object) {
 
 export function generateNameLookup(ocoTree) {
   var colors = {};
-  traverseTree(ocoTree, [], function(path, entry) {
+  traverseTree(ocoTree, [], function(path, entry, isReference) {
     if (entry.type === 'Color') {
       var color = entry.get('rgb').value;
       colors[color] = colors[color] || [];
-      colors[color].push(path.join(".") + "." + entry.name);
+      colors[color].push({
+        path: path.join(".") + "." + entry.name,
+        name: entry.name,
+        isReference: isReference
+      });
     }
   });
   return colors;
@@ -136,9 +151,9 @@ export function traverseTree(subtree, path, callback) {
     if (entry.type === 'Entry') {
       traverseTree(entry, path.concat([entry.name]), callback);
     } else if (entry.type === 'Reference') {
-      callback(path, entry.resolved());
+      callback(path, entry.resolved(), true);
     } else {
-      callback(path, entry);
+      callback(path, entry, false);
     }
   });
 }
