@@ -29,16 +29,16 @@ function getNameLookup(command, layer) {
 }
 
 export const HKSketchFusionExtension = {
-  name: "Open Color Tools",
+  name: "🌈 Open Color Tools (Beta)",
   description: "",
   author: "Jan Krutisch",
   authorEmail: "info@opencolor.tools",
-  version: "1.0.0",
-  identifier: "tools.opencolor.sketch.opencolor",
+  version: "1.2.1",
+  identifier: "tools.opencolor.sketch.opencolor.beta",
 
   commands: {
     importAsDocumentColorsCommand: {
-      name: 'Import as Document colors',
+      name: 'Import Palette as Document Colors',
       run(context) {
 
         //create file enumerator for presetsPath
@@ -69,7 +69,7 @@ export const HKSketchFusionExtension = {
       }
     },
     importAsTaggedLayersColorsCommand: {
-      name: 'Import as Artboards',
+      name: 'Import Palette into Artboard',
       run(context) {
 
         //create file enumerator for presetsPath
@@ -128,7 +128,7 @@ export const HKSketchFusionExtension = {
       }
     },
     exportTaggedLayers: {
-      name: 'Export Artboard',
+      name: 'Export Palette from Artboard',
       run(context) {
 
         var command = context.command;
@@ -219,7 +219,7 @@ export const HKSketchFusionExtension = {
       }
     },
     connectArtboardWithPalette: {
-      name: 'Connect Artboard with Palette',
+      name: 'Link Artboard with Palette',
       run(context) {
         var command = context.command;
         let layer = context.selection.firstObject();
@@ -289,7 +289,7 @@ export const HKSketchFusionExtension = {
       }
     },
     useLayerAsDefinition: {
-      name: 'Use Layer to define color values',
+      name: 'Edit Palette Entry',
       run(context) {
         const styleTypes = ['fill', 'border', 'shadow', 'innerShadow'];
         var command = context.command;
@@ -300,28 +300,34 @@ export const HKSketchFusionExtension = {
           return;
         }
 
+        log(nameLookup);
+
         var identifiedStyles = [];
         if(layer.isKindOfClass(MSTextLayer.class())) {
           var color = '#' + layer.textColor().hexValue();
-          if (nameLookup[color]) {
+          if (color) {
             identifiedStyles.push({
               'type': 'text',
               'value': color,
-              'colors': nameLookup[color]
+              'colors': nameLookup[color] || []
             });
           }
         } else {
           styleTypes.forEach((type) => {
             var color = getStyleColor(layer, type);
-            if (nameLookup[color]) {
+            if (color) {
               identifiedStyles.push({
                 'type': type,
                 'value': color,
-                'colors': nameLookup[color]
+                'colors': nameLookup[color] || []
               });
             }
           });
         }
+
+        log("LIVE MODE ON");
+
+        log(identifiedStyles);
 
         // build ui for identifiedStyles
         var definedNames = [];
