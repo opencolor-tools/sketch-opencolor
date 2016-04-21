@@ -7,6 +7,16 @@ export function arrayify(items) {
   return jsArray;
 }
 
+export function parentPageForObject(object) {
+ if (object.isKindOfClass(MSPage)) {
+   return object;
+ } else if (object.parentGroup() != null) {
+   return parentPageForObject(object.parentGroup());
+ } else {
+   return null;
+ }
+}
+
 export function parentArtboardForObject(object) {
  if (object.isKindOfClass(MSArtboardGroup)) {
    return object;

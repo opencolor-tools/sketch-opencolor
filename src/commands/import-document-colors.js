@@ -1,4 +1,5 @@
 import {selectOcoFile} from '../utils/oco-sketch';
+import {arrayify} from '../utils/sketch-dom';
 var oco = require('opencolor');
 
 export default function importAsDocumentColors(context) {
@@ -26,6 +27,11 @@ export default function importAsDocumentColors(context) {
   traverseTree(tree);
   var msColors = MSArray.dataArrayWithArray(colors);
   context.document.documentData().assets().setColors(msColors);
+
+  // save on each existing page (as ist not possible to store user data on document)
+  arrayify(context.document.pages()).forEach(function(page) {
+    context.command.setValue_forKey_onLayer(String(result), 'ocoPalette', page);
+  });
 
   NSApp.delegate().refreshCurrentDocument();
 

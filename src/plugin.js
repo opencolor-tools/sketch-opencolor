@@ -13,6 +13,7 @@ export const HKSketchFusionExtension = {
       "importAsDocumentColors",
       "importAsArtboard",
       "exportFromArtboard",
+      "linkArtboard",
       "identifyColor",
       "editMapping"
     ]
@@ -36,7 +37,7 @@ export const HKSketchFusionExtension = {
     linkArtboard: {
       name: 'Link Artboard with Palette',
       shortcut: "",
-      rund: commands.linkArtboard
+      run: commands.linkArtboard
     },
     identifyColor: {
       name: 'Identify Colors',

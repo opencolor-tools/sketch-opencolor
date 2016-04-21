@@ -1,6 +1,6 @@
 import {ocoFiles, generateNameLookup} from './oco'
 import {createAlert, createSelect, createLabel} from './sketch-ui'
-import {parentArtboardForObject} from './sketch-dom'
+import {parentArtboardForObject, parentPageForObject} from './sketch-dom'
 import * as oco from 'opencolor'
 
 export const STYLE_TYPES = ['fill', 'border', 'shadow', 'innerShadow'];
@@ -12,13 +12,29 @@ export const STYLE_ICONS = {
   'innerShadow': '⚃'
 }
 
-export function getNameLookupForLayer(command, layer) {
+export function getLinkedPaletteForObject(command, layer) {
   if (!layer) { return null; }
   var artboard = parentArtboardForObject(layer);
   if (!artboard) {
     return null;
   }
   var ocoPalettePath = command.valueForKey_onLayer('ocoPalette', artboard);
+  if(ocoPalettePath) {
+    return ocoPalettePath;
+  }
+  var page = parentPageForObject(artboard);
+  if (!page) {
+    return null;
+  }
+  ocoPalettePath = command.valueForKey_onLayer('ocoPalette', page);
+  if(ocoPalettePath) {
+    return ocoPalettePath;
+  }
+  return null;
+}
+
+export function getNameLookupForLayer(command, layer) {
+  var ocoPalettePath = getLinkedPaletteForObject(command, layer);
   if(!ocoPalettePath) {
     return undefined;
   }
