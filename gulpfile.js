@@ -10,6 +10,8 @@ var async = require('async');
 var fse = require('fs-extra');
 var expandTilde = require('expand-tilde');
 
+var release = require('gulp-github-release');
+var zip = require('gulp-zip');
 
 var SKETCH_PLUGINS_FOLDER = path.join(expandTilde('~'),'/Library/Application Support/com.bohemiancoding.sketch3/Plugins');
 
@@ -125,7 +127,7 @@ gulp.task('bundle',function() {
 
 
 gulp.task('watch', function(){
-    runSequence('build',function() {
+    runSequence('build', function() {
         gulp.watch('./src/**/*.*',function() {
             console.log("Watching...");
             runSequence('clean','build',function(){
@@ -136,5 +138,26 @@ gulp.task('watch', function(){
 });
 
 gulp.task('default',function(callback) {
-    runSequence('build',callback);
+    runSequence('build', callback);
+});
+
+gulp.task('zip', ['build'], function() {
+  return gulp.src('./dist/*.sketchplugin/**/*')
+    .pipe(zip('OpenColorTools-SketchPlugin.zip'))
+    .pipe(gulp.dest('dist'))
+});
+
+gulp.task('release', ['zip'], function() {
+  return gulp.src('./dist/OpenColorTools-SketchPlugin.zip')
+    .pipe(release({
+      //token: 'token',                     // or you can set an env var called GITHUB_TOKEN instead
+      owner: 'opencolor-tools',                    // if missing, it will be extracted from manifest (the repository.url field)
+      repo: 'sketch-opencolor',            // if missing, it will be extracted from manifest (the repository.url field)
+      //tag: 'v1.0.0',                      // if missing, the version will be extracted from manifest and prepended by a 'v'
+      //name: 'publish-release v1.0.0',     // if missing, it will be the same as the tag
+      //notes: 'very good!',                // if missing it will be left undefined
+      draft: false,                       // if missing it's false
+      prerelease: true,                  // if missing it's false
+      manifest: require('./build/manifest.json') // package.json from which default values will be extracted if they're missing
+    }));
 });
