@@ -1,5 +1,6 @@
 import {selectOcoFile} from '../utils/oco-sketch';
 import {arrayify} from '../utils/sketch-dom';
+import {notifyTutorial} from '../utils/oco-tutorial';
 var oco = require('opencolor');
 
 export default function importAsDocumentColors(context) {
@@ -34,5 +35,7 @@ export default function importAsDocumentColors(context) {
   });
 
   NSApp.delegate().refreshCurrentDocument();
+
+  notifyTutorial(context, 'importAsDocumentColors');
 
 }

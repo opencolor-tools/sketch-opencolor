@@ -49,4 +49,6 @@ export default function identifyColors(context) {
   } else {
     context.document.showMessage('🌈 No color identified');
   }
+
+  notifyTutorial(context, 'identifyColors');
 }

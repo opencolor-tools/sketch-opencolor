@@ -3,10 +3,10 @@ import * as commands from './commands';
 export const HKSketchFusionExtension = {
   name: "🌈 Open Color Tools (Beta)",
   description: "",
-  author: "Jan Krutisch, Michael Schieben, Florian Munz",
+  author: "Jan Krutisch, Florian Munz, Michael Schieben",
   authorEmail: "info@opencolor.tools",
-  version: "1.2.1",
-  identifier: "tools.opencolor.sketch.opencolor.beta",
+  version: "1.3.0",
+  identifier: "tools.opencolor.sketch.opencolor",
   menu: {
     "isRoot": false,
     "items": [
