@@ -4,7 +4,7 @@
 
 Start working with meaningful colors in Sketch.
 
-This plugin supports designers who want to meaningful color palettes defined in .oco fiels (open color file format).
+This plugin supports designers who want to use meaningful color palettes defined as .oco fields (open color file format).
 
 [Learn more about Open Color Tools](http://opencolor.tools)
 
@@ -19,13 +19,13 @@ This plugin supports designers who want to meaningful color palettes defined in 
 
 --------------------------------------------------------------------------------
 
-This Plugin is developed open source. It will be shipped with Open Color Tools.
+This plugin is open source. It will be shipped with Open Color Tools.
 
 --------------------------------------------------------------------------------
 
 ## Development
 
-This plugin is based on Sketch Fusion by [Andrey Shakhmin, @turbobabr](https://github.com/turbobabr) as presented at [#SketcHHackday 2016](http://designtoolshackday.com).
+This plugin is based on Sketch Fusion by [Andrey Shakhmin, @turbobabr](https://github.com/turbobabr), as presented at [#SketcHHackday 2016](http://designtoolshackday.com).
 
 Development
 
@@ -34,7 +34,7 @@ npm install
 gulp watch
 ```
 
-To release new version as github release, run:
+To release a new version as github release, run:
 
 ```
 export GITHUB_TOKEN=yoursecrettoken
