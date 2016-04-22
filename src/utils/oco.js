@@ -1,5 +1,5 @@
-export const APP_BUNDLE_IDENTIFIER = 'tools.opencolor.companion-app';
-export const APP_PATH = '/Applications/OpenColor Tools.app';
+export const APP_BUNDLE_IDENTIFIER = 'tools.opencolor.companion';
+export const APP_PATH = '/Applications/Open Color Companion.app';
 
 export function ocoFiles() {
   var url = NSURL.fileURLWithPath(NSHomeDirectory() + "/Library/Colors/OpenColorCache");
