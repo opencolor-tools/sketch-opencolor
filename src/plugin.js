@@ -11,6 +11,7 @@ export const HKSketchFusionExtension = {
     "isRoot": false,
     "items": [
       "importAsDocumentColors",
+      "exportDocumentColors",
       "importAsArtboard",
       "exportFromArtboard",
       "linkArtboard",
@@ -25,6 +26,11 @@ export const HKSketchFusionExtension = {
       name: 'Import as Document Colors',
       shortcut: "",
       run: commands.importAsDocumentColors
+    },
+    exportDocumentColors: {
+      name: 'Export Document Colors',
+      shortcut: "",
+      run: commands.exportDocumentColors
     },
     importAsArtboard: {
       name: 'Import into Artboard',

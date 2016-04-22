@@ -1,4 +1,5 @@
 import importAsDocumentColors from './import-document-colors'
+import exportDocumentColors from './export-document-colors'
 import importAsArtboard from './import-as-artboard'
 import exportFromArtboard from './export-from-artboard'
 import linkArtboard from './link-artboard'
@@ -10,6 +11,7 @@ import openApp from './open-app'
 export {
   importAsDocumentColors,
   importAsArtboard,
+  exportDocumentColors,
   exportFromArtboard,
   linkArtboard,
   identifyColors,
