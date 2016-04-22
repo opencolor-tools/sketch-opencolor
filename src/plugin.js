@@ -15,7 +15,9 @@ export const HKSketchFusionExtension = {
       "exportFromArtboard",
       "linkArtboard",
       "identifyColor",
-      "editMapping"
+      "editMapping",
+      "showInfo",
+      "openApp"
     ]
   },
   commands: {
@@ -48,6 +50,16 @@ export const HKSketchFusionExtension = {
       name: 'Edit Name <-> Color Mapping',
       shortcut: "",
       run: commands.editMapping
+    },
+    showInfo: {
+      name: 'About Open Color Tools',
+      shortcut: "",
+      run: commands.showInfo
+    },
+    openApp: {
+      name: 'Open Companion App',
+      shortcut: "",
+      run: commands.openApp
     }
   }
 };

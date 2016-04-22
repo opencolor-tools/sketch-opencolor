@@ -1,4 +1,4 @@
-import {ocoFiles, generateNameLookup} from './oco'
+import {ocoFiles, generateNameLookup, APP_BUNDLE_IDENTIFIER, APP_PATH} from './oco'
 import {createAlert, createSelect, createLabel} from './sketch-ui'
 import {parentArtboardForObject, parentPageForObject} from './sketch-dom'
 import * as oco from 'opencolor'
@@ -10,6 +10,25 @@ export const STYLE_ICONS = {
   'border': '◻︎',
   'shadow': '❑',
   'innerShadow': '⚃'
+}
+
+export function openApp() {
+  var apps = NSRunningApplication.runningApplicationsWithBundleIdentifier(APP_BUNDLE_IDENTIFIER);
+  if(apps.count() > 0) {
+    apps.objectAtIndex(0).activateWithOptions(NSApplicationActivateAllWindows);
+    return true;
+  }
+  if(NSFileManager.defaultManager().fileExistsAtPath(APP_PATH)) {
+    NSWorkspace.sharedWorkspace().launchApplication(APP_PATH)
+    return true;
+  }
+  return false;
+}
+
+export function getLibFolder() {
+  var url = NSURL.fileURLWithPath(NSHomeDirectory() + '/Library/Colors/OpenColorCache/libfolder.setting');
+  var libFolder = NSString.stringWithContentsOfFile(url);
+  return libFolder;
 }
 
 export function getLinkedPaletteForObject(command, layer) {

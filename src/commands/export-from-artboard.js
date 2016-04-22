@@ -1,5 +1,5 @@
 import {arrayify, parentArtboardForObject, getStyleColor} from '../utils/sketch-dom';
-import {STYLE_TYPES} from '../utils/oco-sketch'
+import {STYLE_TYPES, getLibFolder} from '../utils/oco-sketch'
 var oco = require('opencolor');
 
 export default function exportFromArtboard(context) {
@@ -76,16 +76,19 @@ export default function exportFromArtboard(context) {
   Object.keys(groups).forEach(function(k) {
     ocoPalette.addChild(groups[k]);
   });
+
+  // in memoriam to #sketcHHackday 2016 the following variable
+  // should be call boooom
   var boooom = oco.render(ocoPalette);
   var cachedPalettePathParts = cachedPalettePath.split('/');
 
-  // @TODO: fix hard coded
-  var libFolder = '/Users/mschieben/Desktop/oco'
-  var filePath = libFolder + '/' + cachedPalettePathParts[cachedPalettePathParts.length - 1];
+  var filePath = getLibFolder() + '/' + cachedPalettePathParts[cachedPalettePathParts.length - 1];
 
   var nsBoooom = NSString.alloc().init().stringByAppendingString(boooom);
   nsBoooom.dataUsingEncoding_(NSUTF8StringEncoding).writeToFile_atomically_(filePath, true);
 
   context.document.showMessage('🌈 Saved in Open Color Library!');
+  
+  openApp();
 
 }
