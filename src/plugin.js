@@ -1,44 +1,51 @@
 import * as commands from './commands';
 
 export const HKSketchFusionExtension = {
-  name: "🌈 Open Color Tools (Beta)",
+  name: "Open Color",
   description: "",
   author: "Jan Krutisch, Florian Munz, Michael Schieben",
   authorEmail: "info@opencolor.tools",
-  version: "1.4.1",
+  version: "1.4.2",
   identifier: "tools.opencolor.sketch.opencolor",
   menu: {
     "isRoot": false,
     "items": [
       "importAsDocumentColors",
       "exportDocumentColors",
-      "importAsArtboard",
-      "exportFromArtboard",
-      "linkArtboard",
       "identifyColor",
-      "editMapping",
-      "openApp",
-      "showInfo"
+      {
+        title: "Palettes",
+        items: [
+          "importAsArtboard",
+          "exportFromArtboard",
+          "linkArtboard",
+          "editMapping"
+        ]
+      },
+      {
+        title: 'Help',
+        items: ['showInfo', 'openApp']
+      }
     ]
   },
   commands: {
     importAsDocumentColors: {
-      name: 'Import as Document Colors',
+      name: 'Load Document Colors',
       shortcut: "",
       run: commands.importAsDocumentColors
     },
     exportDocumentColors: {
-      name: 'Export Document Colors',
+      name: 'Save Document Colors',
       shortcut: "",
       run: commands.exportDocumentColors
     },
     importAsArtboard: {
-      name: 'Import into Artboard',
+      name: 'Import Palette',
       shortcut: "",
       run: commands.importAsArtboard
     },
     exportFromArtboard: {
-      name: 'Export from Artboard',
+      name: 'Export Palette',
       shortcut: "",
       run: commands.exportFromArtboard
     },
@@ -49,16 +56,16 @@ export const HKSketchFusionExtension = {
     },
     identifyColor: {
       name: 'Identify Colors',
-      shortcut: "",
+      shortcut: "cmd+shift+1",
       run: commands.identifyColors
     },
     editMapping: {
-      name: 'Edit Name <-> Color Mapping',
+      name: 'Edit Name',
       shortcut: "",
       run: commands.editMapping
     },
     showInfo: {
-      name: 'About Open Color Tools',
+      name: 'About',
       shortcut: "",
       run: commands.showInfo
     },
