@@ -143,12 +143,12 @@ gulp.task('default',function(callback) {
 
 gulp.task('zip', ['build'], function() {
   return gulp.src('./dist/*.sketchplugin/**/*')
-    .pipe(zip('OpenColorTools-SketchPlugin.zip'))
+    .pipe(zip('OpenColor-SketchPlugin.zip'))
     .pipe(gulp.dest('dist'))
 });
 
 gulp.task('release', ['zip'], function() {
-  return gulp.src('./dist/OpenColorTools-SketchPlugin.zip')
+  return gulp.src('./dist/OpenColor-SketchPlugin.zip')
     .pipe(release({
       //token: 'token',                     // or you can set an env var called GITHUB_TOKEN instead
       owner: 'opencolor-tools',                    // if missing, it will be extracted from manifest (the repository.url field)
