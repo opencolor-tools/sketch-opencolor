@@ -5,7 +5,7 @@ export const HKSketchFusionExtension = {
   description: "",
   author: "Jan Krutisch, Florian Munz, Michael Schieben",
   authorEmail: "info@opencolor.tools",
-  version: "1.4.2",
+  version: "1.4.3",
   identifier: "tools.opencolor.sketch.opencolor",
   menu: {
     "isRoot": false,
