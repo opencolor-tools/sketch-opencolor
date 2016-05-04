@@ -2,14 +2,13 @@
   "name": "Open Color Tools Sketch Plugin",
   "version": "1.3.0",
   "description": "A sketch plugin to support the open color file format",
-  "author": "Jan Krutisch, Florian Munz, Michael Schieben",
+  "author": "",
   "authorEmail": "info@opencolor.tools",
   "repository": "https://github.com/opencolor-tools/sketch-opencolor",
   "main": "src/plugin.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "async": "^1.5.2",

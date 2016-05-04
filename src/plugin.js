@@ -10,16 +10,23 @@ export const HKSketchFusionExtension = {
   menu: {
     "isRoot": false,
     "items": [
-      "importAsDocumentColors",
-      "exportDocumentColors",
-      "identifyColor",
+      'linkArtboard',
+      'linkColor',
+      'updateLinkedColors',
+      'updateLinks',
+      'identifyColor',
       {
-        title: "Palettes",
+        title: "Document",
+        items: [
+          "importAsDocumentColors",
+          "exportDocumentColors"
+        ]
+      },
+      {
+        title: "Composition",
         items: [
           "importAsArtboard",
-          "exportFromArtboard",
-          "linkArtboard",
-          "editMapping"
+          "exportFromArtboard"
         ]
       },
       {
@@ -50,7 +57,7 @@ export const HKSketchFusionExtension = {
       run: commands.exportFromArtboard
     },
     linkArtboard: {
-      name: 'Link Artboard with Palette',
+      name: 'Link Artboard to Palette',
       shortcut: "",
       run: commands.linkArtboard
     },
@@ -59,10 +66,20 @@ export const HKSketchFusionExtension = {
       shortcut: "cmd+shift+1",
       run: commands.identifyColors
     },
-    editMapping: {
-      name: 'Edit Name',
+    linkColor: {
+      name: 'Link Color',
       shortcut: "",
-      run: commands.editMapping
+      run: commands.linkColor
+    },
+    updateLinkedColors: {
+      name: 'Update Linked Color',
+      shortcut: "",
+      run: commands.updateLinkedColors
+    },
+    updateLinks: {
+      name: 'Update Links',
+      shortcut: "",
+      run: commands.updateLinks
     },
     showInfo: {
       name: 'About',

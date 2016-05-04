@@ -30,8 +30,12 @@ export function generateNameLookup(ocoTree) {
     if (entry.type === 'Color') {
       var color = entry.get('rgb').value;
       colors[color] = colors[color] || [];
+      var parentPath = path.join(".");
+      if(path.length) {
+        parentPath += '.';
+      }
       colors[color].push({
-        path: path.join(".") + "." + entry.name,
+        path: parentPath + entry.name,
         name: entry.name,
         isReference: isReference
       });
@@ -45,7 +49,11 @@ export function generateColorLookup(ocoTree) {
   traverseTree(ocoTree, [], function(path, entry, isReference) {
     if (entry.type === 'Color') {
       var value = entry.get('rgb').value;
-      var dotPath = path.join(".") + "." + entry.name;
+      var parentPath = path.join(".");
+      if(path.length) {
+        parentPath += '.';
+      }
+      var dotPath = parentPath + entry.name;
       colors[dotPath] = {
         value: value,
         name: entry.name,

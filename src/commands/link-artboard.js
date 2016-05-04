@@ -9,6 +9,7 @@ export default function linkArtboard(context) {
 
   if (!artboard) { return; }
   var value = command.valueForKey_onLayer('ocoPalette', artboard);
+
   var result = selectOcoFile("Select a palette to connect to the current Artboard", "Connect", "" + value, true);
   if (!result) { return; }
 

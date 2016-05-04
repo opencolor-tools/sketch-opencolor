@@ -1,9 +1,10 @@
-import {ocoFiles, generateNameLookup, APP_BUNDLE_IDENTIFIER, APP_PATH} from './oco'
+import {ocoFiles, generateNameLookup, generateColorLookup, APP_BUNDLE_IDENTIFIER, APP_PATH} from './oco'
 import {createAlert, createSelect, createLabel} from './sketch-ui'
 import {parentArtboardForObject, parentPageForObject} from './sketch-dom'
 import * as oco from 'opencolor'
 
 export const STYLE_TYPES = ['fill', 'border', 'shadow', 'innerShadow'];
+export const COLOR_TYPES = STYLE_TYPES.concat(['text']);
 export const STYLE_ICONS = {
   'fill': '◼︎',
   'text': '≣',
@@ -52,15 +53,24 @@ export function getLinkedPaletteForObject(command, layer) {
   return null;
 }
 
-export function getNameLookupForLayer(command, layer) {
+export function getOcoTreeForLayer(command, layer) {
   var ocoPalettePath = getLinkedPaletteForObject(command, layer);
   if(!ocoPalettePath) {
     return undefined;
   }
   var ocoString = NSString.stringWithContentsOfFile(ocoPalettePath);
   var tree = oco.parse(ocoString + "\n");
-  var nameLookup = generateNameLookup(tree);
-  return nameLookup;
+  return tree;
+}
+
+export function getNameLookupForLayer(command, layer) {
+  var tree = getOcoTreeForLayer(command, layer);
+  return generateNameLookup(tree);
+}
+
+export function getColorLookupForLayer(command, layer) {
+  var tree = getOcoTreeForLayer(command, layer);
+  return generateColorLookup(tree);
 }
 
 export function selectOcoFile(title, buttonText, selectedPath, addUnselected) {
