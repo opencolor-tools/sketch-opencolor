@@ -26,12 +26,13 @@
     "gulp-github-release": "^1.1.2",
     "gulp-zip": "^3.2.0",
     "lodash": "^4.2.1",
+    "opencolor": "github:opencolor-tools/opencolor-js",
     "run-sequence": "^1.1.5",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
     "lodash": "^4.9.0",
-    "opencolor": "0.0.1",
+    "opencolor": "opencolor-tools/opencolor-js",
     "sketch-color": "^0.1.1"
   }
 }

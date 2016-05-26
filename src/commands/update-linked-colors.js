@@ -8,9 +8,9 @@ export default function updateLinks(context) {
     return;
   }
 
-  var colorLookup = getColorLookupForLayer(context.command, context.selection.firstObject());
-  log(colorLookup);
-  if (!colorLookup) {
+  var palette = getOcoTreeForLayer(context.command, context.selection.firstObject());
+
+  if (!palette) {
     context.document.showMessage('⛈ Connect Artboard with Palette, first.');
     return;
   }
@@ -22,14 +22,14 @@ export default function updateLinks(context) {
       if(!entryName) {
         return;
       }
-      if(entryName in colorLookup) {
-        var colorInfo = colorLookup[entryName];
-
-        if(styleType == 'text') {
-          layer.setTextColor(MSColor.colorWithSVGString(colorInfo.value));
-        } else {
-          setStyleColor(layer, styleType, colorInfo.value);
-        }
+      var entry = palette.get(entryName);
+      if(!entry) {
+        return;
+      }
+      if(styleType == 'text') {
+        layer.setTextColor(MSColor.colorWithSVGString(entry.hexcolor()));
+      } else {
+        setStyleColor(layer, styleType, entry.hexcolor());
       }
     });
   });

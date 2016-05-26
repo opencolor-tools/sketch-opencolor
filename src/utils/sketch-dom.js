@@ -57,7 +57,6 @@ export function setStyleColor(layer, styleType, hexValue) {
 
 export function findLayersInLayer(rootLayer, name, exactMatch, type, subLayersOnly, layersToExclude) {
 
-  log(rootLayer);
   //create predicate format
   var formatRules = ['(name != NULL)'];
   var predicateArguments = [];

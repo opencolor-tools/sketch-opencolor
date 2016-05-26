@@ -2,6 +2,7 @@ import {ocoFiles, generateNameLookup, generateColorLookup, APP_BUNDLE_IDENTIFIER
 import {createAlert, createSelect, createLabel} from './sketch-ui'
 import {parentArtboardForObject, parentPageForObject} from './sketch-dom'
 import * as oco from 'opencolor'
+import * as _ from 'lodash'
 
 export const STYLE_TYPES = ['fill', 'border', 'shadow', 'innerShadow'];
 export const COLOR_TYPES = STYLE_TYPES.concat(['text']);
@@ -34,19 +35,21 @@ export function getLibFolder() {
 
 export function getLinkedPaletteForObject(command, layer) {
   if (!layer) { return null; }
+  var ocoPalettePath = null;
+
   var artboard = parentArtboardForObject(layer);
-  if (!artboard) {
-    return null;
+  if (artboard) {
+    ocoPalettePath = command.valueForKey_onLayer('ocoPalette', artboard);
   }
-  var ocoPalettePath = command.valueForKey_onLayer('ocoPalette', artboard);
+
   if(ocoPalettePath) {
     return ocoPalettePath;
   }
   var page = parentPageForObject(artboard);
-  if (!page) {
-    return null;
+  if (page) {
+    ocoPalettePath = command.valueForKey_onLayer('ocoPalette', page);
   }
-  ocoPalettePath = command.valueForKey_onLayer('ocoPalette', page);
+
   if(ocoPalettePath) {
     return ocoPalettePath;
   }
@@ -54,6 +57,7 @@ export function getLinkedPaletteForObject(command, layer) {
 }
 
 export function getOcoTreeForLayer(command, layer) {
+
   var ocoPalettePath = getLinkedPaletteForObject(command, layer);
   if(!ocoPalettePath) {
     return undefined;
