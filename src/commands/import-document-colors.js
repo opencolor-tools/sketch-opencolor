@@ -19,7 +19,7 @@ export default function importAsDocumentColors(context) {
   function traverseTree(subtree) {
     subtree.children.forEach(function(entry) {
       if (entry.type === 'Color') {
-        colors.push(MSColor.colorWithSVGString(entry.get('rgb').value));
+        colors.push(MSColor.colorWithSVGString(entry.hexcolor()));
       } else if (entry.type === 'Entry') {
         traverseTree(entry);
       }

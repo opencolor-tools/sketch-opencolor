@@ -2,6 +2,8 @@ import {selectOcoFile} from '../utils/oco-sketch';
 import {generateColorLookup} from '../utils/oco';
 var oco = require('opencolor');
 
+const FILL = 0;
+
 export default function importAsArtboard(context) {
   //create file enumerator for presetsPath
   // clear them
@@ -11,8 +13,6 @@ export default function importAsArtboard(context) {
 
   var ocoString = NSString.stringWithContentsOfFile(result);
   var tree = oco.parse(ocoString + "\n");
-  var colorLookup = generateColorLookup(tree);
-
   var artboard = MSArtboardGroup.new()
   var artboardWidth = 400;
 
@@ -27,12 +27,8 @@ export default function importAsArtboard(context) {
   var height = 40;
   var width = artboardWidth - 2 * padding;
   var artboardHeight = padding * 2;
-
-  Object.keys(colorLookup).forEach((dotPath, index) => {
-    var color = colorLookup[dotPath];
-    if(color.isReference) {
-      return;
-    }
+  var index = 0
+  tree.traverseTree(['Color'], (entry) => {
 
     var rect = artboard.addLayerOfType('rectangle');
     rect.frame().setX(x);
@@ -40,12 +36,14 @@ export default function importAsArtboard(context) {
     artboardHeight += (height + padding);
     rect.frame().setWidth(width);
     rect.frame().setHeight(height);
-    rect.setName(dotPath);
+    rect.setName(entry.path());
     rect.setNameIsFixed(true);
-    var fill = rect.style().fills().addNewStylePart();
-    fill.color = MSColor.colorWithSVGString(color.value);
+    var fill = rect.style().addStylePartOfType(FILL);
+    fill.color = MSColor.colorWithSVGString(entry.hexcolor());
 
-    command.setValue_forKey_onLayer(String(dotPath), 'oco_defines_fill', rect);
+    command.setValue_forKey_onLayer(entry.path(), 'oco_defines_fill', rect);
+
+    index++;
   });
 
   var frame = artboard.frame()

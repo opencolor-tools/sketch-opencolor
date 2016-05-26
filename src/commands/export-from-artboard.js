@@ -1,5 +1,8 @@
 import {arrayify, parentArtboardForObject, getStyleColor} from '../utils/sketch-dom';
 import {STYLE_TYPES, getLibFolder} from '../utils/oco-sketch'
+import {createAlert, createLabel, createComboBox} from '../utils/sketch-ui';
+import {openApp} from '../utils/oco-sketch';
+import {ocoFiles} from '../utils/oco';
 var oco = require('opencolor');
 
 export default function exportFromArtboard(context) {
@@ -17,20 +20,10 @@ export default function exportFromArtboard(context) {
   }
   var cachedPalettePath = command.valueForKey_onLayer('ocoPalette', artboard);
   if (!cachedPalettePath) {
-    context.document.showMessage('⛈ Connect artboard first.');
-    return;
+    cachedPalettePath = 'new-palette';
   }
   //artboard
-  var ocoPalette = new oco.Entry('Root');
-  var groups = {};
-
-  function colorNameProcessor(colorName) {
-    var parts = colorName.split('.');
-    return {
-      colorName: parts[1],
-      groupName: parts[0],
-    }
-  }
+  var ocoPalette = new oco.Entry();
 
   var children = arrayify(artboard.children()).reverse();
   children.forEach(function(child) {
@@ -45,50 +38,54 @@ export default function exportFromArtboard(context) {
         return;
       }
       var colorValue = getStyleColor(child, type);
-      var name = dotPath;
-      var group = null;
-      var processedNames = colorNameProcessor(name);
-      var colorName = processedNames.colorName;
-      var groupName = processedNames.groupName;
 
-      if(groupName != null) {
-        if(Object.keys(groups).indexOf(groupName) != -1) {
-          group = groups[groupName];
-        } else {
-          group = new oco.Entry(groupName, [], 'Entry');
-          groups[groupName] = group;
-        }
-      }
-
-      var colorEntry = new oco.Entry(colorName, [], 'Color');
-      colorEntry.addChild(oco.ColorValue.fromColorValue(colorValue), true);
-
-      if(group) {
-        group.addChild(colorEntry, [], 'color');
-      } else {
-        ocoPalette.addChild(colorEntry, [], 'color');
-      }
+      var colorEntry = new oco.Entry(dotPath.split('.').pop(), [oco.ColorValue.fromColorValue(colorValue)], 'Color');
+      ocoPalette.set(dotPath, colorEntry);
 
     });
 
   });
 
-  Object.keys(groups).forEach(function(k) {
-    ocoPalette.addChild(groups[k]);
-  });
+  var alert = createAlert('Export Palette', 'Enter a name for the palette');
+
+  var listView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,50));
+  listView.addSubview(createLabel('Enter a new name or overwrite an existing palette:', NSMakeRect(0, 30, 300, 20), 12));
+
+  var existingPalettes = ocoFiles().map(file => file.name.replace('.oco', ''));
+  var uiSelect = createComboBox(existingPalettes, 0, NSMakeRect(0, 0, 300, 25), true);
+
+  if(cachedPalettePath && cachedPalettePath != '') {
+    uiSelect.setStringValue(cachedPalettePath.split('/').pop().replace('.oco', ''));
+  }
+
+  listView.addSubview(uiSelect);
+  alert.addAccessoryView(listView);
+
+
+  alert.addButtonWithTitle('Save');
+  alert.addButtonWithTitle('Cancel');
+
+  var responseCode = alert.runModal();
+  if(responseCode != '1000') {
+    return null;
+  }
 
   // in memoriam to #sketcHHackday 2016 the following variable
   // should be call boooom
   var boooom = oco.render(ocoPalette);
-  var cachedPalettePathParts = cachedPalettePath.split('/');
 
-  var filePath = getLibFolder() + '/' + cachedPalettePathParts[cachedPalettePathParts.length - 1];
+  var name = uiSelect.stringValue();
+  if(!name || name == '') {
+    name = uiSelect.objectValueOfSelectedItem();
+  }
+
+  var filePath = getLibFolder() + name.replace('.oco', '') + '.oco';
 
   var nsBoooom = NSString.alloc().init().stringByAppendingString(boooom);
   nsBoooom.dataUsingEncoding_(NSUTF8StringEncoding).writeToFile_atomically_(filePath, true);
 
-  context.document.showMessage('🌈 Saved in Open Color Library!');
-  
+  context.document.showMessage(`🌈 Saved as "${name}" in Open Color Library`);
+
   openApp();
 
 }

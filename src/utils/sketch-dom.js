@@ -8,45 +8,55 @@ export function arrayify(items) {
 }
 
 export function parentPageForObject(object) {
- if (object.isKindOfClass(MSPage)) {
-   return object;
- } else if (object.parentGroup() != null) {
-   return parentPageForObject(object.parentGroup());
- } else {
-   return null;
- }
+  if (object.isKindOfClass(MSPage)) {
+    return object;
+  } else if (object.parentGroup() != null) {
+    return parentPageForObject(object.parentGroup());
+  } else {
+    return null;
+  }
 }
 
 export function parentArtboardForObject(object) {
- if (object.isKindOfClass(MSArtboardGroup)) {
-   return object;
- } else if (object.parentGroup() != null) {
-   return parentArtboardForObject(object.parentGroup());
- } else {
-   return null;
- }
+  if (object.isKindOfClass(MSArtboardGroup)) {
+    return object;
+  } else if (object.parentGroup() != null) {
+    return parentArtboardForObject(object.parentGroup());
+  } else {
+    return null;
+  }
 }
 
 function getStyle(layer, styleType) {
- var style = layer.style();
- if(!style[styleType]) {
-   return null;
- }
- return style[styleType]();
+  var style = layer.style();
+  if(!style[styleType]) {
+    return null;
+  }
+  return style[styleType]();
 }
 
 //styleType: one of fill, border, innerShadow
 export function getStyleColor(layer, styleType) {
- var style = getStyle(layer, styleType);
- if(!style) {
-   return null;
- }
- return '#' + style.color().hexValue();
+  var style = getStyle(layer, styleType);
+  if(!style) {
+    return null;
+  }
+  return '#' + style.color().hexValue();
+}
+
+export function setStyleColor(layer, styleType, hexValue) {
+
+  var style = layer.style();
+  if(!style[styleType]) {
+    log("no style here");
+    return null;
+  }
+  var fill = style[styleType]().color = MSColor.colorWithSVGString(hexValue);
+
 }
 
 export function findLayersInLayer(rootLayer, name, exactMatch, type, subLayersOnly, layersToExclude) {
 
-  log(rootLayer);
   //create predicate format
   var formatRules = ['(name != NULL)'];
   var predicateArguments = [];

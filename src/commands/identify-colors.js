@@ -1,12 +1,13 @@
 import {STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer} from '../utils/oco-sketch'
 import {getStyleColor} from '../utils/sketch-dom'
-var oco = require('opencolor');
+import {notifyTutorial} from '../utils/oco-tutorial'
+var oco = require('opencolor')
 
 export default function identifyColors(context) {
   var command = context.command;
   let layer = context.selection.firstObject();
 
-  var nameLookup = getNameLookupForLayer(command, layer);
+  var nameLookup = getNameLookupForLayer(command, layer); 
   if (!nameLookup) {
     context.document.showMessage('⛈ Connect Artboard with Palette, first.');
     return;

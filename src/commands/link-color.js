@@ -43,7 +43,7 @@ export default function editMapping(context) {
   });
   definedNames = ['-- nothing --'].concat(definedNames);
 
-  var alert = createAlert('Open Color Tools', 'Use the following colors of this layer to create a oco color');
+  var alert = createAlert('Link Color', 'Link the following styles to a palette');
 
   identifiedStyles.forEach((style, index) => {
 
