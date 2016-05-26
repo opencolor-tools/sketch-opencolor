@@ -5,7 +5,7 @@ export const HKSketchFusionExtension = {
   description: "",
   author: "Jan Krutisch, Florian Munz, Michael Schieben",
   authorEmail: "info@opencolor.tools",
-  version: "1.4.3",
+  version: "1.6.0",
   identifier: "tools.opencolor.sketch.opencolor",
   menu: {
     "isRoot": false,
@@ -15,6 +15,15 @@ export const HKSketchFusionExtension = {
       'updateLinkedColors',
       'updateLinks',
       'identifyColor',
+      {
+        title: "Identify",
+        items: [
+          "identifyAll",
+          "identifyFill",
+          "identifyBorder",
+          "identifyText"
+        ]
+      },
       {
         title: "Document",
         items: [
@@ -29,6 +38,7 @@ export const HKSketchFusionExtension = {
           "exportFromArtboard"
         ]
       },
+      'settings',
       {
         title: 'Help',
         items: ['showInfo', 'openApp']
@@ -61,10 +71,25 @@ export const HKSketchFusionExtension = {
       shortcut: "",
       run: commands.linkArtboard
     },
-    identifyColor: {
-      name: 'Identify Colors',
+    identifyAll: {
+      name: 'Identify All Colors',
       shortcut: "cmd+shift+1",
-      run: commands.identifyColors
+      run: commands.identifyAll
+    },
+    identifyFill: {
+      name: 'Identify Fill Color',
+      shortcut: "",
+      run: commands.identifyFill
+    },
+    identifyBorder: {
+      name: 'Identify Border Color',
+      shortcut: "",
+      run: commands.identifyBorder
+    },
+    identifyText: {
+      name: 'Identify Text Color',
+      shortcut: "",
+      run: commands.identifyText
     },
     linkColor: {
       name: 'Link Color',
@@ -80,6 +105,11 @@ export const HKSketchFusionExtension = {
       name: 'Update Links',
       shortcut: "",
       run: commands.updateLinks
+    },
+    settings: {
+      name: 'Settings',
+      shortcut: "",
+      run: commands.settings
     },
     showInfo: {
       name: 'About',

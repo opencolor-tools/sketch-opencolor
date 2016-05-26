@@ -1,6 +1,10 @@
 export const APP_BUNDLE_IDENTIFIER = 'tools.opencolor.companion';
 export const APP_PATH = '/Applications/Open Color Companion.app';
 
+export function getName(path) {
+  return path.split('/').pop().replace('.oco', '')
+}
+
 export function ocoFiles() {
   var url = NSURL.fileURLWithPath(NSHomeDirectory() + "/Library/Colors/OpenColorCache");
   var enumerator = NSFileManager.defaultManager().enumeratorAtURL_includingPropertiesForKeys_options_errorHandler(url, [NSURLIsDirectoryKey, NSURLNameKey, NSURLPathKey], NSDirectoryEnumerationSkipsHiddenFiles, null);

@@ -1,20 +1,21 @@
-import {getLibFolder} from '../utils/oco-sketch';
+import {getLibFolder, getDefaultPalette} from '../utils/oco-sketch';
 import {createAlert} from '../utils/sketch-ui';
+import {getName} from '../utils/oco';
 
 export default function showInfo(context) {
 
   var title = 'Open Color Tools';
   var message = `
-Thank you for using Open Color Tools.
-Open Color Tools works best with its companion app.
+Thank you for using the Open Color Sketch Plugin.
+The plugin works best with its companion app and the color picker.
 
-–
+Settings:
+· Palette Library: ${getLibFolder()}
+· Default Palette: ${(getName(getDefaultPalette()) || 'not set')}
 
-· Library: ${getLibFolder()}
+Need support?
+Want to learn more on designing with meaningful colors?
 
--
-
-Need more info or support?
 Please visit http://opencolor.tools
 `;
 

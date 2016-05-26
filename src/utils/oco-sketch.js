@@ -53,7 +53,7 @@ export function getLinkedPaletteForObject(command, layer) {
   if(ocoPalettePath) {
     return ocoPalettePath;
   }
-  return null;
+  return getDefaultPalette();
 }
 
 export function getOcoTreeForLayer(command, layer) {
@@ -69,12 +69,23 @@ export function getOcoTreeForLayer(command, layer) {
 
 export function getNameLookupForLayer(command, layer) {
   var tree = getOcoTreeForLayer(command, layer);
+  if (!tree) {
+    return undefined;
+  }
   return generateNameLookup(tree);
 }
 
 export function getColorLookupForLayer(command, layer) {
   var tree = getOcoTreeForLayer(command, layer);
   return generateColorLookup(tree);
+}
+
+export function getDefaultPalette() {
+  return NSUserDefaults.standardUserDefaults().objectForKey('oco.defaultPalette');
+}
+
+export function setDefaultPalette(path) {
+  NSUserDefaults.standardUserDefaults().setObject_forKey(path, 'oco.defaultPalette');
 }
 
 export function selectOcoFile(title, buttonText, selectedPath, addUnselected) {
@@ -91,7 +102,7 @@ export function selectOcoFile(title, buttonText, selectedPath, addUnselected) {
   }
 
   var listView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,50));
-  var alert = createAlert('Open Color Tools', 'Select a palette to import as document colors');
+  var alert = createAlert('Open Color Tools', title);
   var ocoSelect = createSelect(labels, selectedIndex, NSMakeRect(0, 0, 300, 25));
 
   listView.addSubview(createLabel('Please select a palette', NSMakeRect(0, 30, 300, 20), 12));
