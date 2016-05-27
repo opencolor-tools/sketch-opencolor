@@ -29,15 +29,13 @@ function identifyColors(context, types) {
     return;
   }
 
-  log(nameLookup)
-
   var shouldIdentifyText = (types.indexOf('text') !== -1)
   var styleTypes = types.filter(t => t !== 'text')
 
   var identifiedStyles = [];
   if(shouldIdentifyText && layer.isKindOfClass(MSTextLayer.class())) {
     var color = '#' + layer.textColor().hexValue();
-    if (nameLookup[color]) {
+    if (color && nameLookup[color]) {
       identifiedStyles.push({
         'type': 'text',
         'value': color,
@@ -47,7 +45,7 @@ function identifyColors(context, types) {
   } else {
     styleTypes.forEach((type) => {
       var color = getStyleColor(layer, type);
-      if (nameLookup[color]) {
+      if (color && nameLookup[color]) {
         identifiedStyles.push({
           'type': type,
           'value': color,

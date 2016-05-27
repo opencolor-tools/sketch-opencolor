@@ -62,7 +62,8 @@ export function getOcoTreeForLayer(command, layer) {
   if(!ocoPalettePath) {
     return undefined;
   }
-  var ocoString = NSString.stringWithContentsOfFile(ocoPalettePath);
+  var ocoPaletteUrl = NSURL.fileURLWithPath(ocoPalettePath);
+  var ocoString = NSString.stringWithContentsOfFile(ocoPaletteUrl);
   var tree = oco.parse(ocoString + "\n");
   return tree;
 }

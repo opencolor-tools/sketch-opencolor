@@ -1,11 +1,14 @@
 import {findLayersInLayer} from '../utils/sketch-dom';
 
 export function notifyTutorial(context, action) {
-  var firstArtboard = context.document.artboards().objectAtIndex(0);
+  var artboards = context.document.artboards();
+  if(!artboards.count()) {
+    return;
+  }
+  var firstArtboard = artboards.objectAtIndex(0);
   if(firstArtboard.name() != 'oct/tutorial/config') {
     return;
   }
-  log(firstArtboard.name())
   var configString = firstArtboard.children().objectAtIndex(0).stringValue();
   var config = null;
   try {

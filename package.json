@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "lodash": "^4.9.0",
-    "opencolor": "opencolor-tools/opencolor-js",
+    "opencolor": "opencolor-tools/opencolor-js#v0.0.12",
     "sketch-color": "^0.1.1"
   }
 }

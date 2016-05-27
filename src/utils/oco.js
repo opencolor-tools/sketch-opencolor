@@ -30,20 +30,14 @@ export function ocoFiles() {
 
 export function generateNameLookup(ocoTree) {
   var colors = {};
-  traverseTree(ocoTree, [], function(path, entry, isReference) {
-    if (entry.type === 'Color') {
-      var color = entry.hexcolor();
-      colors[color] = colors[color] || [];
-      var parentPath = path.join(".");
-      if(path.length) {
-        parentPath += '.';
-      }
-      colors[color].push({
-        path: parentPath + entry.name,
-        name: entry.name,
-        isReference: isReference
-      });
-    }
+  ocoTree.traverseTree(['Color'], function(entry) {
+    var color = entry.hexcolor();
+    colors[color] = colors[color] || [];
+    colors[color].push({
+      path: entry.path().replace(/^Root\./, ''),
+      name: entry.name,
+      isReference: false
+    });
   });
   return colors;
 }

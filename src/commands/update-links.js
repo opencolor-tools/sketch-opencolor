@@ -9,7 +9,7 @@ export default function updateLinks(context) {
   }
 
   var colorLookup = getColorLookupForLayer(context.command, context.selection.firstObject());
-  log(colorLookup);
+
   if (!colorLookup) {
     context.document.showMessage('⛈ Connect Artboard with Palette, first.');
     return;

@@ -8,9 +8,9 @@ export function arrayify(items) {
 }
 
 export function parentPageForObject(object) {
-  if (object.isKindOfClass(MSPage)) {
+  if (object && object.isKindOfClass(MSPage)) {
     return object;
-  } else if (object.parentGroup() != null) {
+  } else if (object && object.parentGroup() != null) {
     return parentPageForObject(object.parentGroup());
   } else {
     return null;
@@ -18,9 +18,9 @@ export function parentPageForObject(object) {
 }
 
 export function parentArtboardForObject(object) {
-  if (object.isKindOfClass(MSArtboardGroup)) {
+  if (object && object.isKindOfClass(MSArtboardGroup)) {
     return object;
-  } else if (object.parentGroup() != null) {
+  } else if (object && object.parentGroup() != null) {
     return parentArtboardForObject(object.parentGroup());
   } else {
     return null;
@@ -48,7 +48,6 @@ export function setStyleColor(layer, styleType, hexValue) {
 
   var style = layer.style();
   if(!style[styleType]) {
-    log("no style here");
     return null;
   }
   var fill = style[styleType]().color = MSColor.colorWithSVGString(hexValue);
