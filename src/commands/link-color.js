@@ -1,5 +1,6 @@
-import {STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer} from '../utils/oco-sketch'
-import {getStyleColor} from '../utils/sketch-dom'
+import {STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer, getLinkedPaletteForObject} from '../utils/oco-sketch'
+import {getStyleColor, arrayify} from '../utils/sketch-dom'
+import {getName} from '../utils/oco'
 import {createAlert, createComboBox, createLabel} from '../utils/sketch-ui'
 import updateLinkedColors from './update-linked-colors'
 
@@ -7,6 +8,7 @@ export default function editMapping(context) {
 
   var command = context.command;
   let layer = context.selection.firstObject();
+  let paletteName = getName(getLinkedPaletteForObject(context, layer));
   var nameLookup = getNameLookupForLayer(command, layer);
   if (!nameLookup) {
     context.document.showMessage('⛈ Connect Artboard with Palette, first.');
@@ -44,7 +46,14 @@ export default function editMapping(context) {
   });
   definedNames = ['-- nothing --'].concat(definedNames);
 
-  var alert = createAlert('Link Color', 'Link the following styles to a palette');
+  var alert = createAlert(`Set Color · ${paletteName}`, `Update the color of the following styles based on values in ${paletteName} palette.`);
+
+  var nSelected = context.selection.count();
+  if (nSelected > 1) {
+    var listView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,20));
+    listView.addSubview(createLabel(`Save sets the color on ${nSelected} selected layers`, NSMakeRect(0, 0, 300, 20), 10));
+    alert.addAccessoryView(listView);
+  }
 
   identifiedStyles.forEach((style, index) => {
 
@@ -82,7 +91,9 @@ export default function editMapping(context) {
       value = style.uiSelect.objectValueOfSelectedItem();
     }
 
-    command.setValue_forKey_onLayer(String(value), 'oco_defines_' + style.type, layer);
+    arrayify(context.selection).forEach(function(layer) {
+      command.setValue_forKey_onLayer(String(value), 'oco_defines_' + style.type, layer);
+    })
 
   });
 

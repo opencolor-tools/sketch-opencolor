@@ -1,10 +1,22 @@
 export function arrayify(items) {
+  if(!items) {
+    return []
+  }
   var length = items.count();
   var jsArray = [];
   while (length--) {
     jsArray.push(items.objectAtIndex(length));
   }
   return jsArray;
+}
+
+export function layersWithChildren(layers) {
+  var items = [];
+  arrayify(layers).forEach(function(layer) {
+    items.push(layer)
+    items = items.concat(arrayify(layer.children()))
+  });
+  return items
 }
 
 export function parentPageForObject(object) {

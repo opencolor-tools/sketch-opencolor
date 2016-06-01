@@ -5,7 +5,7 @@ export const HKSketchFusionExtension = {
   description: "",
   author: "Jan Krutisch, Florian Munz, Michael Schieben",
   authorEmail: "info@opencolor.tools",
-  version: "1.6.2",
+  version: "1.7.0",
   identifier: "tools.opencolor.sketch.opencolor",
   menu: {
     "isRoot": false,
@@ -92,19 +92,19 @@ export const HKSketchFusionExtension = {
       run: commands.identifyText
     },
     linkColor: {
-      name: 'Set Color from Palette',
+      name: 'Set Color',
       shortcut: "cmd+shift+1",
       run: commands.linkColor
     },
-    updateLinkedColors: {
-      name: 'Apply Colors from Palette',
-      shortcut: "",
-      run: commands.updateLinkedColors
-    },
     updateLinks: {
-      name: 'Rename Links',
+      name: 'Swap Colors',
       shortcut: "",
       run: commands.updateLinks
+    },
+    updateLinkedColors: {
+      name: 'Update Colors',
+      shortcut: "",
+      run: commands.updateLinkedColors
     },
     settings: {
       name: 'Settings',

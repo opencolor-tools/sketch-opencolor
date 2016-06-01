@@ -1,6 +1,6 @@
 import {COLOR_TYPES, getColorLookupForLayer} from '../utils/oco-sketch'
 import {createAlert, createLabel} from '../utils/sketch-ui';
-import {arrayify} from '../utils/sketch-dom';
+import {arrayify, layersWithChildren} from '../utils/sketch-dom';
 import updateLinkedColors from './update-linked-colors'
 
 export default function updateLinks(context) {
@@ -16,7 +16,7 @@ export default function updateLinks(context) {
     return;
   }
 
-  var alert = createAlert("Find and Replace", "Please configure replacement", "icon.png");
+  var alert = createAlert("Swap Color", "Find and Replaces all assigned color names", "icon.png");
   var listView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 60));
 
   var searchTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 30, 200, 22));
@@ -39,13 +39,12 @@ export default function updateLinks(context) {
 
   var searchTerm = searchTextField.stringValue();
   var replaceTerm = replaceTextField.stringValue();
-
-  var replacements = [];
+  var selectionWithChildren = layersWithChildren(context.selection);
+  var changes = [];
   var replacementCounts = 0;
-  var affectedLayers = 0;
 
-  arrayify(context.selection).forEach(function(layer) {
-    var wasAffected = false;
+  selectionWithChildren.forEach(function(layer) {
+    var replacements = [];
     COLOR_TYPES.forEach(function(styleType) {
 
       var existingValue = context.command.valueForKey_onLayer('oco_defines_' + styleType, layer);
@@ -54,6 +53,7 @@ export default function updateLinks(context) {
         return;
       }
       var info = {
+        style: styleType,
         from: existingValue,
         error: false
       }
@@ -63,32 +63,36 @@ export default function updateLinks(context) {
         info.error = 'Not in palette'
       } else {
         context.command.setValue_forKey_onLayer(String(newValue), 'oco_defines_' + styleType, layer);
-        wasAffected = true;
-        replacementCounts++;
       }
 
       replacements.push(info);
     });
-    if(wasAffected) {
-      affectedLayers++;
+    replacementCounts += replacements.length;
+    if (replacements.length) {
+      changes.push({
+        layer: layer.name(),
+        replacements: replacements
+      })
     }
   });
 
-  var title = "Replaced " + replacementCounts + " values in " + affectedLayers + " Layers (while searching in " + context.selection.count() + " layers).";
-  var info = 'Replacements:\n\n';
-  Object.keys(replacements).forEach(function(key) {
-    var replacementInfo = replacements[key];
-    if (replacementInfo.error) {
-      info += '🚨 ' + replacementInfo.error + '\n'
-    } else {
-      info += '✅ '
-    }
-    info += replacementInfo.from + ' ➡︎ ' + replacementInfo.to + '\n';
+  var title = `Replaced ${replacementCounts} values in ${changes.length} Layers (while searching in ${selectionWithChildren.length} layers).`;
+  var details = 'Replacements:\n\n';
+  changes.forEach(function(info) {
+    details += info.layer + '\n';
+    info.replacements.forEach(function(replacementInfo) {
+      if (replacementInfo.error) {
+        details += '🚨 ' + replacementInfo.error + '\n'
+      } else {
+        details += '✅ ' + replacementInfo.style + '\n'
+      }
+      details += '  ' + replacementInfo.from + ' ➡︎ ' + replacementInfo.to + '\n';
+    })
   });
-  var alert = createAlert(title, info, 'icon.png');
+  var alert = createAlert(title, details, 'icon.png');
   alert.addButtonWithTitle('Done!');
 
   updateLinkedColors(context);
-  
+
   alert.runModal();
 }
