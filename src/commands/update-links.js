@@ -1,6 +1,7 @@
 import {COLOR_TYPES, getColorLookupForLayer} from '../utils/oco-sketch'
 import {createAlert, createLabel} from '../utils/sketch-ui';
 import {arrayify} from '../utils/sketch-dom';
+import updateLinkedColors from './update-linked-colors'
 
 export default function updateLinks(context) {
   if(!context.selection.count()) {
@@ -85,7 +86,9 @@ export default function updateLinks(context) {
     info += replacementInfo.from + ' ➡︎ ' + replacementInfo.to + '\n';
   });
   var alert = createAlert(title, info, 'icon.png');
-  alert.addButtonWithTitle('Doneke!');
-  alert.addButtonWithTitle("Cancel");
+  alert.addButtonWithTitle('Done!');
+
+  updateLinkedColors(context);
+  
   alert.runModal();
 }

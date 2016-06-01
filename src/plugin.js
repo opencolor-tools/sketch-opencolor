@@ -73,7 +73,7 @@ export const HKSketchFusionExtension = {
     },
     identifyAll: {
       name: 'Identify All Colors',
-      shortcut: "cmd+shift+1",
+      shortcut: "cmd+shift+2",
       run: commands.identifyAll
     },
     identifyFill: {
@@ -92,17 +92,17 @@ export const HKSketchFusionExtension = {
       run: commands.identifyText
     },
     linkColor: {
-      name: 'Link Color',
-      shortcut: "",
+      name: 'Set Color from Palette',
+      shortcut: "cmd+shift+1",
       run: commands.linkColor
     },
     updateLinkedColors: {
-      name: 'Update Linked Color',
+      name: 'Apply Colors from Palette',
       shortcut: "",
       run: commands.updateLinkedColors
     },
     updateLinks: {
-      name: 'Update Links',
+      name: 'Rename Links',
       shortcut: "",
       run: commands.updateLinks
     },

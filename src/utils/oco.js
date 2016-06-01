@@ -15,11 +15,9 @@ export function ocoFiles() {
       var isDir = MOPointer.alloc().init();
       fileUrl.getResourceValue_forKey_error(isDir, NSURLIsDirectoryKey, null);
       if(!Number(isDir.value())) {
-        var presetPath = String(fileUrl.path());
-        var pathParts = presetPath.split("/");
-        var fileName = pathParts[pathParts.length - 1];
+        var presetPath = '' + fileUrl.path();
         files.push({
-          name: fileName,
+          name: getName(presetPath),
           path: presetPath
         });
       }
@@ -29,47 +27,45 @@ export function ocoFiles() {
 }
 
 export function generateNameLookup(ocoTree) {
-  var colors = {};
-  ocoTree.traverseTree(['Color'], function(entry) {
-    var color = entry.hexcolor();
+  var colors = {}; // #FFFFFF -> { path: name: isReference:}
+  ocoTree.traverseTree(['Color', 'Reference'], function(entry) {
+    var color = '';
+    if (entry.type === 'Reference') {
+      var colorEntry = entry.resolved();
+      if (colorEntry && colorEntry.type == 'Color') {
+        color = colorEntry.hexcolor();
+      }
+    } else {
+      color = entry.hexcolor();
+    }
     colors[color] = colors[color] || [];
     colors[color].push({
       path: entry.path().replace(/^Root\./, ''),
       name: entry.name,
-      isReference: false
+      isReference: (entry.type === 'Reference')
     });
   });
   return colors;
 }
 
 export function generateColorLookup(ocoTree) {
-  var colors = {};
-  traverseTree(ocoTree, [], function(path, entry, isReference) {
-    if (entry.type === 'Color') {
-      var value = entry.hexcolor();
-      var parentPath = path.join(".");
-      if(path.length) {
-        parentPath += '.';
+  var colors = {}; // dot.path -> { value: name: isReference:}
+
+  ocoTree.traverseTree(['Color', 'Reference'], function(entry) {
+    var value = '';
+    if (entry.type === 'Reference') {
+      var colorEntry = entry.resolved();
+      if (colorEntry && colorEntry.type == 'Color') {
+        value = colorEntry.hexcolor();
       }
-      var dotPath = parentPath + entry.name;
-      colors[dotPath] = {
-        value: value,
-        name: entry.name,
-        isReference: isReference
-      }
+    } else {
+      value = entry.hexcolor();
     }
+    colors[entry.path()] = {
+      value: value,
+      name: entry.name,
+      isReference: (entry.type === 'Reference')
+    };
   });
   return colors;
-}
-
-export function traverseTree(subtree, path, callback) {
-  subtree.forEach(function(entry) {
-    if (entry.type === 'Entry') {
-      traverseTree(entry, path.concat([entry.name]), callback);
-    } else if (entry.type === 'Reference') {
-      callback(path, entry.resolved(), true);
-    } else {
-      callback(path, entry, false);
-    }
-  });
 }

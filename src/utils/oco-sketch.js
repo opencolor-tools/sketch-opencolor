@@ -82,7 +82,8 @@ export function getColorLookupForLayer(command, layer) {
 }
 
 export function getDefaultPalette() {
-  return NSUserDefaults.standardUserDefaults().objectForKey('oco.defaultPalette');
+  var palette = '' + NSUserDefaults.standardUserDefaults().objectForKey('oco.defaultPalette');
+  return palette;
 }
 
 export function setDefaultPalette(path) {
@@ -97,10 +98,15 @@ export function selectOcoFile(title, buttonText, selectedPath, addUnselected) {
   }
 
   var paths = files.map(ocoFile => ocoFile.path);
+
+  log(paths)
+  log(typeof selectedPath)
+  log(typeof paths[2])
   var selectedIndex = Math.max(0, paths.indexOf(selectedPath));
   if (addUnselected) {
     selectedIndex += 1;
   }
+  log(selectedIndex)
 
   var listView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,50));
   var alert = createAlert('Open Color Tools', title);

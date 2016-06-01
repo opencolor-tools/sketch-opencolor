@@ -1,6 +1,7 @@
 import {STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer} from '../utils/oco-sketch'
 import {getStyleColor} from '../utils/sketch-dom'
 import {createAlert, createComboBox, createLabel} from '../utils/sketch-ui'
+import updateLinkedColors from './update-linked-colors'
 
 export default function editMapping(context) {
 
@@ -84,4 +85,6 @@ export default function editMapping(context) {
     command.setValue_forKey_onLayer(String(value), 'oco_defines_' + style.type, layer);
 
   });
+
+  updateLinkedColors(context);
 }
