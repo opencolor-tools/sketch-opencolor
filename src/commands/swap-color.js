@@ -1,9 +1,9 @@
 import {COLOR_TYPES, getColorLookupForLayer} from '../utils/oco-sketch'
 import {createAlert, createLabel} from '../utils/sketch-ui';
 import {arrayify, layersWithChildren} from '../utils/sketch-dom';
-import updateLinkedColors from './update-linked-colors'
+import updateColors from './update-colors'
 
-export default function updateLinks(context) {
+export default function swapColor(context) {
   if(!context.selection.count()) {
     context.document.showMessage('Select layers first.');
     return;
@@ -92,7 +92,7 @@ export default function updateLinks(context) {
   var alert = createAlert(title, details, 'icon.png');
   alert.addButtonWithTitle('Done!');
 
-  updateLinkedColors(context);
+  updateColors(context);
 
   alert.runModal();
 }

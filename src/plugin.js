@@ -11,9 +11,9 @@ export const HKSketchFusionExtension = {
     "isRoot": false,
     "items": [
       'linkArtboard',
-      'linkColor',
-      'updateLinkedColors',
-      'updateLinks',
+      'setColor',
+      'updateColors',
+      'swapColor',
       'identifyColor',
       {
         title: "Identify",
@@ -91,20 +91,20 @@ export const HKSketchFusionExtension = {
       shortcut: "",
       run: commands.identifyText
     },
-    linkColor: {
+    setColor: {
       name: 'Set Color',
       shortcut: "cmd+shift+1",
-      run: commands.linkColor
+      run: commands.setColor
     },
-    updateLinks: {
+    swapColor: {
       name: 'Swap Colors',
       shortcut: "",
-      run: commands.updateLinks
+      run: commands.swapColor
     },
-    updateLinkedColors: {
+    updateColors: {
       name: 'Update Colors',
       shortcut: "",
-      run: commands.updateLinkedColors
+      run: commands.updateColors
     },
     settings: {
       name: 'Settings',

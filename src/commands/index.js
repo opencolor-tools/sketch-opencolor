@@ -4,9 +4,9 @@ import importAsArtboard from './import-as-artboard'
 import exportFromArtboard from './export-from-artboard'
 import linkArtboard from './link-artboard'
 import {identifyAll, identifyFill, identifyBorder, identifyText}  from './identify-colors'
-import linkColor from './link-color'
-import updateLinkedColors from './update-linked-colors'
-import updateLinks from './update-links'
+import setColor from './set-color'
+import updateColors from './update-colors'
+import swapColor from './swap-color'
 import settings from './settings'
 import showInfo from './show-info'
 import openApp from './open-app'
@@ -21,9 +21,9 @@ export {
   identifyFill,
   identifyBorder,
   identifyText,
-  linkColor,
-  updateLinkedColors,
-  updateLinks,
+  setColor,
+  updateColors,
+  swapColor,
   settings,
   showInfo,
   openApp

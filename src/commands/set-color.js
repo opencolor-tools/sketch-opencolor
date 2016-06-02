@@ -2,9 +2,9 @@ import {STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer, getLinkedPaletteForObje
 import {getStyleColor, arrayify} from '../utils/sketch-dom'
 import {getName} from '../utils/oco'
 import {createAlert, createComboBox, createLabel} from '../utils/sketch-ui'
-import updateLinkedColors from './update-linked-colors'
+import updateColors from './update-colors'
 
-export default function editMapping(context) {
+export default function setColor(context) {
 
   var command = context.command;
   let layer = context.selection.firstObject();
@@ -97,5 +97,5 @@ export default function editMapping(context) {
 
   });
 
-  updateLinkedColors(context);
+  updateColors(context);
 }
