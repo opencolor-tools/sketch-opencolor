@@ -99,14 +99,10 @@ export function selectOcoFile(title, buttonText, selectedPath, addUnselected) {
 
   var paths = files.map(ocoFile => ocoFile.path);
 
-  log(paths)
-  log(typeof selectedPath)
-  log(typeof paths[2])
   var selectedIndex = Math.max(0, paths.indexOf(selectedPath));
   if (addUnselected) {
     selectedIndex += 1;
   }
-  log(selectedIndex)
 
   var listView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,50));
   var alert = createAlert('Open Color Tools', title);

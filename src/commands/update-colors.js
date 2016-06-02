@@ -4,7 +4,7 @@ import {layersWithChildren, setStyleColor} from '../utils/sketch-dom';
 
 export default function updateLinkedColors(context) {
   if(!context.selection.count()) {
-    context.document.showMessage('Select layers first.');
+    context.document.showMessage('⛈ Select layers, first');
     return;
   }
 
@@ -25,6 +25,12 @@ export default function updateLinkedColors(context) {
       var entry = palette.get(entryName);
       if(!entry) {
         return;
+      }
+      if(entry.type == 'Reference') {
+        entry = entry.resolved();
+        if(!entry) {
+          return;
+        }
       }
       if(styleType == 'text') {
         layer.setTextColor(MSColor.colorWithSVGString(entry.hexcolor()));

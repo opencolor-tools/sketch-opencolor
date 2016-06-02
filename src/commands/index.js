@@ -7,6 +7,7 @@ import {identifyAll, identifyFill, identifyBorder, identifyText}  from './identi
 import setColor from './set-color'
 import updateColors from './update-colors'
 import swapColor from './swap-color'
+import swapTheme from './swap-theme'
 import settings from './settings'
 import showInfo from './show-info'
 import openApp from './open-app'
@@ -24,6 +25,7 @@ export {
   setColor,
   updateColors,
   swapColor,
+  swapTheme,
   settings,
   showInfo,
   openApp

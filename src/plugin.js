@@ -12,9 +12,10 @@ export const HKSketchFusionExtension = {
     "items": [
       'linkArtboard',
       'setColor',
-      'updateColors',
-      'swapColor',
       'identifyColor',
+      'swapColor',
+      'swapTheme',
+      'updateColors',
       {
         title: "Identify",
         items: [
@@ -96,15 +97,20 @@ export const HKSketchFusionExtension = {
       shortcut: "cmd+shift+1",
       run: commands.setColor
     },
+    updateColors: {
+      name: 'Update Colors',
+      shortcut: "",
+      run: commands.updateColors
+    },
     swapColor: {
       name: 'Swap Colors',
       shortcut: "",
       run: commands.swapColor
     },
-    updateColors: {
-      name: 'Update Colors',
+    swapTheme: {
+      name: 'Swap Theme',
       shortcut: "",
-      run: commands.updateColors
+      run: commands.swapTheme
     },
     settings: {
       name: 'Settings',

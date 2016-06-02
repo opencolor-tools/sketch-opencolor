@@ -6,9 +6,9 @@ import updateColors from './update-colors'
 
 export default function setColor(context) {
 
-  var command = context.command;
+  let command = context.command;
   let layer = context.selection.firstObject();
-  let paletteName = getName(getLinkedPaletteForObject(context, layer));
+  let paletteName = getName(getLinkedPaletteForObject(command, layer));
   var nameLookup = getNameLookupForLayer(command, layer);
   if (!nameLookup) {
     context.document.showMessage('⛈ Connect Artboard with Palette, first.');
@@ -44,7 +44,7 @@ export default function setColor(context) {
     var paths = nameLookup[k].map(name => name.path);
     definedNames = definedNames.concat(paths);
   });
-  definedNames = ['-- nothing --'].concat(definedNames);
+  definedNames = definedNames.sort();
 
   var alert = createAlert(`Set Color · ${paletteName}`, `Update the color of the following styles based on values in ${paletteName} palette.`);
 
@@ -57,17 +57,28 @@ export default function setColor(context) {
 
   identifiedStyles.forEach((style, index) => {
 
-    var listView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,50));
-    listView.addSubview(createLabel(STYLE_ICONS[style.type] + ' ' + style.type + ' · color name', NSMakeRect(0, 30, 300, 20), 12));
+    var values = [''].concat(definedNames);
+    var selectedValue = null;
 
-    var uiSelect = createComboBox(definedNames, 0, NSMakeRect(0, 0, 300, 25), true);
     var existingValue = command.valueForKey_onLayer('oco_defines_' + style.type, layer);
 
-
+    let saveIndicator = '';
     if(existingValue && existingValue != '') {
-      uiSelect.setStringValue(existingValue);
+      selectedValue = existingValue;
+      saveIndicator = ' › linked as'
+    } else if (style.colors.length) {
+      saveIndicator = ' › identified as'
+      selectedValue = style.colors[0].path;
+      values = style.colors.map(name => name.path).concat(values)
     }
 
+    var uiSelect = createComboBox(values, 0, NSMakeRect(0, 0, 300, 25), true);
+    if (selectedValue) {
+      uiSelect.setStringValue(selectedValue);
+    }
+
+    var listView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,50));
+    listView.addSubview(createLabel(STYLE_ICONS[style.type] + ' ' + style.type + saveIndicator, NSMakeRect(0, 30, 300, 20), 12));
     listView.addSubview(uiSelect);
     alert.addAccessoryView(listView);
     identifiedStyles[index].uiSelect = uiSelect;

@@ -5,6 +5,16 @@ export function getName(path) {
   return path.split('/').pop().replace('.oco', '')
 }
 
+export function getSignature(tree) {
+  const signature = [];
+  tree.forEach((entry) => {
+    if (entry.type !== 'Entry') {
+      signature.push(entry.name)
+    }
+  });
+  return signature.sort();
+}
+
 export function ocoFiles() {
   var url = NSURL.fileURLWithPath(NSHomeDirectory() + "/Library/Colors/OpenColorCache");
   var enumerator = NSFileManager.defaultManager().enumeratorAtURL_includingPropertiesForKeys_options_errorHandler(url, [NSURLIsDirectoryKey, NSURLNameKey, NSURLPathKey], NSDirectoryEnumerationSkipsHiddenFiles, null);
