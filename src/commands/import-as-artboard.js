@@ -30,7 +30,7 @@ export default function importAsArtboard(context) {
   var index = 0
   tree.traverseTree(['Color'], (entry) => {
 
-    var rect = artboard.addLayerOfType('rectangle');
+    var rect = MSRectangleShape.alloc().init();
     rect.frame().setX(x);
     rect.frame().setY(padding + (height + padding) * index);
     artboardHeight += (height + padding);
@@ -38,10 +38,12 @@ export default function importAsArtboard(context) {
     rect.frame().setHeight(height);
     rect.setName(entry.path());
     rect.setNameIsFixed(true);
-    var fill = rect.style().addStylePartOfType(FILL);
+    var group = MSShapeGroup.shapeWithPath(rect);
+    var fill = group.style().addStylePartOfType(FILL);
     fill.color = MSColor.colorWithSVGString(entry.hexcolor());
+    artboard.addLayers([group]);
 
-    command.setValue_forKey_onLayer(entry.path(), 'oco_defines_fill', rect);
+    command.setValue_forKey_onLayer(entry.path(), 'oco_defines_fill', group);
 
     index++;
   });

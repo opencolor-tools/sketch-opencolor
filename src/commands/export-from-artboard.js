@@ -3,6 +3,7 @@ import {STYLE_TYPES, getLibFolder} from '../utils/oco-sketch'
 import {createAlert, createLabel, createComboBox} from '../utils/sketch-ui';
 import {openApp} from '../utils/oco-sketch';
 import {ocoFiles} from '../utils/oco';
+import {hasMSArray} from '../utils/sketch-deprecated';
 var oco = require('opencolor');
 
 export default function exportFromArtboard(context) {
@@ -25,7 +26,12 @@ export default function exportFromArtboard(context) {
   //artboard
   var ocoPalette = new oco.Entry();
 
-  var children = arrayify(artboard.children()).reverse();
+  var children = artboard.children()
+  if (hasMSArray()) {
+    children = arrayify(children).reverse();
+  } else {
+    children = children.reverse();
+  }
   children.forEach(function(child) {
     if (!child.isKindOfClass(MSShapeGroup)) {
       return;
@@ -33,12 +39,10 @@ export default function exportFromArtboard(context) {
     //var identit getIdentifyStyles(child);
     STYLE_TYPES.forEach((type) => {
       var dotPath = command.valueForKey_onLayer('oco_defines_' + type, child);
-
       if(!dotPath || dotPath == '') {
         return;
       }
       var colorValue = getStyleColor(child, type);
-
       var colorEntry = new oco.Entry(dotPath.split('.').pop(), [oco.ColorValue.fromColorValue(colorValue)], 'Color');
       ocoPalette.set(dotPath, colorEntry);
 
