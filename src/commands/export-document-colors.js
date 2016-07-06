@@ -2,6 +2,8 @@ import {arrayify} from '../utils/sketch-dom';
 import {getLibFolder} from '../utils/oco-sketch'
 import {ocoFiles} from '../utils/oco'
 import {createAlert, createComboBox, createLabel} from '../utils/sketch-ui'
+import {hasMSArray} from '../utils/sketch-deprecated';
+
 var oco = require('opencolor');
 import {ntc} from '../vendor/ntc';
 
@@ -42,9 +44,16 @@ export default function exportFromArtboard(context) {
     exportName += '.oco';
   }
 
-  var colors = context.document.documentData().assets().primitiveColors().array();
+  var colors = null;
+  if (hasMSArray()) {
+    colors = context.document.documentData().assets().primitiveColors().array();
+    //colors = arrayify(colors);
+  } else {
+    colors = context.document.documentData().assets().primitiveColors();
+  }
   var usedNames = {};
-  colors = arrayify(colors);
+
+  log(colors);
 
   ntc.init();
   colors.forEach(function(color, i) {
