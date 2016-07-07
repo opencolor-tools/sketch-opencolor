@@ -75,23 +75,34 @@ export default function swapColor (context) {
     }
   })
 
-  var title = `Replaced ${replacementCounts} values in ${changes.length} Layers (while searching in ${selectionWithChildren.length} layers).`
+  var title = `Swapped ${replacementCounts} values in ${changes.length} Layers (while searching in ${selectionWithChildren.length} layers).`
   var details = 'Replacements:\n\n'
-  changes.forEach(function (info) {
-    details += info.layer + '\n'
-    info.replacements.forEach(function (replacementInfo) {
-      if (replacementInfo.error) {
-        details += '🚨 ' + replacementInfo.error + '\n'
-      } else {
-        details += '✅ ' + replacementInfo.style + '\n'
-      }
-      details += '  ' + replacementInfo.from + ' ➡︎ ' + replacementInfo.to + '\n'
-    })
-  })
-  var errorAlert = createAlert(title, details, 'icon.png')
-  errorAlert.addButtonWithTitle('Done!')
+  var errors = {}
 
   updateColors(context)
 
-  errorAlert.runModal()
+  changes.forEach(function (info) {
+    info.replacements.forEach(function (replacementInfo) {
+      if (replacementInfo.error) {
+        errors[info.layer] = errors[info.layer] || []
+        errors[info.layer].push(replacementInfo)
+      }
+    })
+  })
+
+  if (Object.keys(errors).length === 0) {
+    context.document.showMessage(`🌈 ${title}`)
+  } else {
+    Object.keys(errors).forEach(function (key) {
+      details += key + '\n'
+      errors[key].forEach(function (replacementInfo) {
+        details += '🚨 ' + replacementInfo.error
+        details += ' › ' + replacementInfo.from + ' › ' + replacementInfo.to + '\n'
+        details += '\n'
+      })
+      var alert = createAlert(title, details, 'icon.png')
+      alert.addButtonWithTitle('Done!')
+      alert.runModal()
+    })
+  }
 }
