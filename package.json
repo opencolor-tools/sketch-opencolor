@@ -7,7 +7,8 @@
   "repository": "https://github.com/opencolor-tools/sketch-opencolor",
   "main": "src/plugin.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "standard 'src/**/*.js'"
   },
   "license": "MIT",
   "devDependencies": {
@@ -27,11 +28,26 @@
     "gulp-zip": "^3.2.0",
     "lodash": "^4.2.1",
     "run-sequence": "^1.1.5",
+    "standard": "^7.1.2",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
     "lodash": "^4.9.0",
     "opencolor": "^0.2.0",
     "sketch-color": "^0.1.1"
+  },
+  "standard": {
+    "ignore": [
+      "src/vendor/"
+    ],
+    "globals": [
+      "NSURL", "NSView", "NSMakeRect", "NSString", "NSUTF8StringEncoding", "MSShapeGroup",
+      "MSArtboardGroup", "MSRectangleShape", "MSShapeGroup", "MSColor", "MSArray", "MSColor",
+      "NSApp", "MSTextLayer", "NSWorkspace", "NSTextField", "STYLE_ICONS",
+      "NSRunningApplication", "NSApplicationActivateAllWindows", "NSFileManager", "NSHomeDirectory",
+      "NSUserDefaults", "NSURLIsDirectoryKey", "NSURLNameKey", "NSURLPathKey",
+      "NSDirectoryEnumerationSkipsHiddenFiles", "MOPointer", "MSPage", "NSPredicate",
+      "NSPopUpButton", "NSComboBox", "COSAlertWindow", "NSFont", "NSImage"
+    ]
   }
 }

@@ -1,3 +1,3 @@
-export function hasMSArray() {
-  return (typeof MSArray !== 'undefined');
+export function hasMSArray () {
+  return (typeof MSArray !== 'undefined')
 }

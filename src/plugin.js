@@ -1,15 +1,15 @@
-import * as commands from './commands';
+import * as commands from './commands'
 
 export const HKSketchFusionExtension = {
-  name: "Open Color",
-  description: "",
-  author: "Jan Krutisch, Florian Munz, Michael Schieben",
-  authorEmail: "info@opencolor.tools",
-  version: "1.8.1",
-  identifier: "tools.opencolor.sketch.opencolor",
+  name: 'Open Color',
+  description: '',
+  author: 'Jan Krutisch, Florian Munz, Michael Schieben',
+  authorEmail: 'info@opencolor.tools',
+  version: '1.8.1',
+  identifier: 'tools.opencolor.sketch.opencolor',
   menu: {
-    "isRoot": false,
-    "items": [
+    'isRoot': false,
+    'items': [
       'linkArtboard',
       'setColor',
       'identifyColor',
@@ -17,26 +17,26 @@ export const HKSketchFusionExtension = {
       'swapTheme',
       'updateColors',
       {
-        title: "Identify",
+        title: 'Identify',
         items: [
-          "identifyAll",
-          "identifyFill",
-          "identifyBorder",
-          "identifyText"
+          'identifyAll',
+          'identifyFill',
+          'identifyBorder',
+          'identifyText'
         ]
       },
       {
-        title: "Document",
+        title: 'Document',
         items: [
-          "importAsDocumentColors",
-          "exportDocumentColors"
+          'importAsDocumentColors',
+          'exportDocumentColors'
         ]
       },
       {
-        title: "Composition",
+        title: 'Composition',
         items: [
-          "importAsArtboard",
-          "exportFromArtboard"
+          'importAsArtboard',
+          'exportFromArtboard'
         ]
       },
       'settings',
@@ -49,83 +49,83 @@ export const HKSketchFusionExtension = {
   commands: {
     importAsDocumentColors: {
       name: 'Load Document Colors',
-      shortcut: "",
+      shortcut: '',
       run: commands.importAsDocumentColors
     },
     exportDocumentColors: {
       name: 'Save Document Colors',
-      shortcut: "",
+      shortcut: '',
       run: commands.exportDocumentColors
     },
     importAsArtboard: {
       name: 'Import Palette',
-      shortcut: "",
+      shortcut: '',
       run: commands.importAsArtboard
     },
     exportFromArtboard: {
       name: 'Export Palette',
-      shortcut: "",
+      shortcut: '',
       run: commands.exportFromArtboard
     },
     linkArtboard: {
       name: 'Link Artboard to Palette',
-      shortcut: "",
+      shortcut: '',
       run: commands.linkArtboard
     },
     identifyAll: {
       name: 'Identify All Colors',
-      shortcut: "cmd+shift+2",
+      shortcut: 'cmd+shift+2',
       run: commands.identifyAll
     },
     identifyFill: {
       name: 'Identify Fill Color',
-      shortcut: "",
+      shortcut: '',
       run: commands.identifyFill
     },
     identifyBorder: {
       name: 'Identify Border Color',
-      shortcut: "",
+      shortcut: '',
       run: commands.identifyBorder
     },
     identifyText: {
       name: 'Identify Text Color',
-      shortcut: "",
+      shortcut: '',
       run: commands.identifyText
     },
     setColor: {
       name: 'Set Color',
-      shortcut: "cmd+shift+1",
+      shortcut: 'cmd+shift+1',
       run: commands.setColor
     },
     updateColors: {
       name: 'Update Colors',
-      shortcut: "",
+      shortcut: '',
       run: commands.updateColors
     },
     swapColor: {
       name: 'Swap Colors',
-      shortcut: "",
+      shortcut: '',
       run: commands.swapColor
     },
     swapTheme: {
       name: 'Swap Theme',
-      shortcut: "",
+      shortcut: '',
       run: commands.swapTheme
     },
     settings: {
       name: 'Settings',
-      shortcut: "",
+      shortcut: '',
       run: commands.settings
     },
     showInfo: {
       name: 'About',
-      shortcut: "",
+      shortcut: '',
       run: commands.showInfo
     },
     openApp: {
       name: 'Open Companion App',
-      shortcut: "",
+      shortcut: '',
       run: commands.openApp
     }
   }
-};
+}

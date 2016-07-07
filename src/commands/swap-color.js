@@ -1,98 +1,97 @@
-import {COLOR_TYPES, getColorLookupForLayer} from '../utils/oco-sketch'
-import {createAlert, createLabel} from '../utils/sketch-ui';
-import {arrayify, layersWithChildren} from '../utils/sketch-dom';
+import { COLOR_TYPES, getColorLookupForLayer } from '../utils/oco-sketch'
+import { createAlert, createLabel } from '../utils/sketch-ui'
+import { layersWithChildren } from '../utils/sketch-dom'
 import updateColors from './update-colors'
 
-export default function swapColor(context) {
-  if(!context.selection.count()) {
-    context.document.showMessage('Select layers first.');
-    return;
+export default function swapColor (context) {
+  if (!context.selection.count()) {
+    context.document.showMessage('Select layers first.')
+    return
   }
 
-  var colorLookup = getColorLookupForLayer(context.command, context.selection.firstObject());
+  var colorLookup = getColorLookupForLayer(context.command, context.selection.firstObject())
 
   if (!colorLookup) {
-    context.document.showMessage('⛈ Connect Artboard with Palette, first.');
-    return;
+    context.document.showMessage('⛈ Connect Artboard with Palette, first.')
+    return
   }
 
-  var alert = createAlert("Swap Color", "Find and Replaces all assigned color names", "icon.png");
-  var listView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 60));
+  var alert = createAlert('Swap Color', 'Find and Replaces all assigned color names', 'icon.png')
+  var listView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 60))
 
-  var searchTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 30, 200, 22));
-  listView.addSubview(createLabel('Find', NSMakeRect(0, 30, 80, 22), 12, true));
-  listView.addSubview(searchTextField);
+  var searchTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 30, 200, 22))
+  listView.addSubview(createLabel('Find', NSMakeRect(0, 30, 80, 22), 12, true))
+  listView.addSubview(searchTextField)
 
-  var replaceTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 0, 200, 22));
-  listView.addSubview(createLabel('Replace', NSMakeRect(0, 0, 80, 22), 12, true));
-  listView.addSubview(replaceTextField);
+  var replaceTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 0, 200, 22))
+  listView.addSubview(createLabel('Replace', NSMakeRect(0, 0, 80, 22), 12, true))
+  listView.addSubview(replaceTextField)
 
-  alert.addAccessoryView(listView);
+  alert.addAccessoryView(listView)
 
-  alert.addButtonWithTitle('Find, Replace & Update Colors');
-  alert.addButtonWithTitle('Cancel');
+  alert.addButtonWithTitle('Find, Replace & Update Colors')
+  alert.addButtonWithTitle('Cancel')
 
-  var responseCode = alert.runModal();
-  if(responseCode != '1000') {
-    return;
+  var responseCode = alert.runModal()
+  if (responseCode != '1000') { // eslint-disable-line eqeqeq
+    return
   }
 
-  var searchTerm = searchTextField.stringValue();
-  var replaceTerm = replaceTextField.stringValue();
-  var selectionWithChildren = layersWithChildren(context.selection);
-  var changes = [];
-  var replacementCounts = 0;
+  var searchTerm = searchTextField.stringValue()
+  var replaceTerm = replaceTextField.stringValue()
+  var selectionWithChildren = layersWithChildren(context.selection)
+  var changes = []
+  var replacementCounts = 0
 
-  selectionWithChildren.forEach(function(layer) {
-    var replacements = [];
-    COLOR_TYPES.forEach(function(styleType) {
+  selectionWithChildren.forEach(function (layer) {
+    var replacements = []
+    COLOR_TYPES.forEach(function (styleType) {
+      var existingValue = context.command.valueForKey_onLayer('oco_defines_' + styleType, layer)
 
-      var existingValue = context.command.valueForKey_onLayer('oco_defines_' + styleType, layer);
-
-      if(!existingValue) {
-        return;
+      if (!existingValue) {
+        return
       }
       var info = {
         style: styleType,
         from: existingValue,
         error: false
       }
-      var newValue = existingValue.replace(searchTerm, replaceTerm);
-      info.to = newValue;
-      if(Object.keys(colorLookup).indexOf(newValue) == -1) {
+      var newValue = existingValue.replace(searchTerm, replaceTerm)
+      info.to = newValue
+      if (Object.keys(colorLookup).indexOf(newValue) === -1) {
         info.error = 'Not in palette'
       } else {
-        context.command.setValue_forKey_onLayer(String(newValue), 'oco_defines_' + styleType, layer);
+        context.command.setValue_forKey_onLayer(String(newValue), 'oco_defines_' + styleType, layer)
       }
 
-      replacements.push(info);
-    });
-    replacementCounts += replacements.length;
+      replacements.push(info)
+    })
+    replacementCounts += replacements.length
     if (replacements.length) {
       changes.push({
         layer: layer.name(),
         replacements: replacements
       })
     }
-  });
+  })
 
-  var title = `Replaced ${replacementCounts} values in ${changes.length} Layers (while searching in ${selectionWithChildren.length} layers).`;
-  var details = 'Replacements:\n\n';
-  changes.forEach(function(info) {
-    details += info.layer + '\n';
-    info.replacements.forEach(function(replacementInfo) {
+  var title = `Replaced ${replacementCounts} values in ${changes.length} Layers (while searching in ${selectionWithChildren.length} layers).`
+  var details = 'Replacements:\n\n'
+  changes.forEach(function (info) {
+    details += info.layer + '\n'
+    info.replacements.forEach(function (replacementInfo) {
       if (replacementInfo.error) {
         details += '🚨 ' + replacementInfo.error + '\n'
       } else {
         details += '✅ ' + replacementInfo.style + '\n'
       }
-      details += '  ' + replacementInfo.from + ' ➡︎ ' + replacementInfo.to + '\n';
+      details += '  ' + replacementInfo.from + ' ➡︎ ' + replacementInfo.to + '\n'
     })
-  });
-  var alert = createAlert(title, details, 'icon.png');
-  alert.addButtonWithTitle('Done!');
+  })
+  var errorAlert = createAlert(title, details, 'icon.png')
+  errorAlert.addButtonWithTitle('Done!')
 
-  updateColors(context);
+  updateColors(context)
 
-  alert.runModal();
+  errorAlert.runModal()
 }
