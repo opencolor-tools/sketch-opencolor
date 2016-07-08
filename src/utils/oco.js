@@ -1,8 +1,10 @@
 export const APP_BUNDLE_IDENTIFIER = 'tools.opencolor.companion'
 export const APP_PATH = '/Applications/Open Color Companion.app'
 
-export function getName (path) {
-  return path.split('/').pop().replace('.oco', '')
+import path from 'path'
+
+export function getName (pathName) {
+  return path.basename('' + pathName, '.oco')
 }
 
 export function getSignature (tree) {
@@ -15,8 +17,13 @@ export function getSignature (tree) {
   return signature.sort()
 }
 
+export function ocoCachePath () {
+  return NSHomeDirectory() + '/Library/Colors/OpenColorCache'
+}
+
 export function ocoFiles () {
-  var url = NSURL.fileURLWithPath(NSHomeDirectory() + '/Library/Colors/OpenColorCache')
+  var cachePath = ocoCachePath()
+  var url = NSURL.fileURLWithPath(cachePath)
   var enumerator = NSFileManager.defaultManager().enumeratorAtURL_includingPropertiesForKeys_options_errorHandler(url, [NSURLIsDirectoryKey, NSURLNameKey, NSURLPathKey], NSDirectoryEnumerationSkipsHiddenFiles, null)
   var fileUrl
   var files = []
@@ -25,7 +32,7 @@ export function ocoFiles () {
       var isDir = MOPointer.alloc().init()
       fileUrl.getResourceValue_forKey_error(isDir, NSURLIsDirectoryKey, null)
       if (!Number(isDir.value())) {
-        var presetPath = '' + fileUrl.path()
+        var presetPath = path.relative('' + cachePath, '' + fileUrl.path())
         files.push({
           name: getName(presetPath),
           path: presetPath

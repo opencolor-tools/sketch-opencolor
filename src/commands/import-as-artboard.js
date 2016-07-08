@@ -1,4 +1,5 @@
 import { selectOcoFile } from '../utils/oco-sketch'
+import { ocoCachePath } from '../utils/oco'
 import { parse } from 'opencolor'
 
 const FILL = 0
@@ -10,7 +11,7 @@ export default function importAsArtboard (context) {
   var result = selectOcoFile('Select a palette to import as document colors', 'Import')
   if (!result) { return }
 
-  var ocoString = NSString.stringWithContentsOfFile(result)
+  var ocoString = NSString.stringWithContentsOfFile(ocoCachePath() + '/' + result)
   var tree = parse(ocoString + '\n')
   var artboard = MSArtboardGroup.new()
   var artboardWidth = 400

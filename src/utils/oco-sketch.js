@@ -1,4 +1,4 @@
-import { ocoFiles, generateNameLookup, generateColorLookup, APP_BUNDLE_IDENTIFIER, APP_PATH } from './oco'
+import { ocoFiles, ocoCachePath, generateNameLookup, generateColorLookup, APP_BUNDLE_IDENTIFIER, APP_PATH } from './oco'
 import { createAlert, createSelect, createLabel } from './sketch-ui'
 import { parentArtboardForObject, parentPageForObject } from './sketch-dom'
 import * as oco from 'opencolor'
@@ -59,6 +59,10 @@ export function getOcoTreeForLayer (command, layer) {
   var ocoPalettePath = getLinkedPaletteForObject(command, layer)
   if (!ocoPalettePath) {
     return undefined
+  }
+
+  if (('' + ocoPalettePath).indexOf('/Library/Colors') === -1) {    // string is relative
+    ocoPalettePath = ocoCachePath() + '/' + ocoPalettePath
   }
   var ocoPaletteUrl = NSURL.fileURLWithPath(ocoPalettePath)
   var ocoString = NSString.stringWithContentsOfFile(ocoPaletteUrl)

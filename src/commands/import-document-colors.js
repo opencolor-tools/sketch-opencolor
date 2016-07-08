@@ -1,4 +1,5 @@
 import { selectOcoFile } from '../utils/oco-sketch'
+import { ocoCachePath } from '../utils/oco'
 import { arrayify } from '../utils/sketch-dom'
 import { notifyTutorial } from '../utils/oco-tutorial'
 import { hasMSArray } from '../utils/sketch-deprecated'
@@ -17,7 +18,7 @@ export default function importAsDocumentColors (context) {
     context.document.documentData().assets().setColors([])
   }
   // context.document.documentData().assets().setColors(NSArray.arrayWithArray([]))
-  var ocoString = NSString.stringWithContentsOfFile(result)
+  var ocoString = NSString.stringWithContentsOfFile(ocoCachePath() + '/' + result)
   var tree = parse(ocoString + '\n')
   var colors = []
   function traverseTree (subtree) {
