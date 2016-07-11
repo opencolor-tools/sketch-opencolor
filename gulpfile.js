@@ -42,7 +42,7 @@ function extractManifestObject() {
 }
 
 gulp.task('clean', function () {
-    return del(['build','dist']);
+    return del(['build/**','dist/**']);
 });
 
 gulp.task('prepare-manifest',function(callback) {
@@ -70,7 +70,7 @@ gulp.task('assemble-plugin-bundle',function(callback) {
         return name;
     }
 
-    var bundlePath = path.join(__dirname,'dist',normalizePluginFileName(currentManifest.name)+'.sketchplugin');
+    var bundlePath = path.join(__dirname,'dist',normalizePluginFileName(currentManifest.bundleName || currentManifest.name) + '.sketchplugin');
 
     async.parallel({
         manifest: function(callback) {
@@ -93,7 +93,7 @@ gulp.task('assemble-plugin-resources',function(callback) {
     }
 
     return gulp.src('src/resources/**/*.*')
-        .pipe(gulp.dest(path.join(__dirname,'dist',normalizePluginFileName(currentManifest.name)+'.sketchplugin','Contents/Resources')));
+        .pipe(gulp.dest(path.join(__dirname,'dist',normalizePluginFileName(currentManifest.bundleName || currentManifest.name)+'.sketchplugin','Contents/Resources')));
 });
 
 gulp.task('install-plugin',function(){
