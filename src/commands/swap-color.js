@@ -38,6 +38,14 @@ export default function swapColor (context) {
   }
 
   var searchTerm = searchTextField.stringValue()
+  if (searchTerm[0] == '/') {
+    try {
+      searchTerm = new RegExp(searchTerm.replace('/', ''))
+    } catch(e) {
+      context.document.showMessage('Invalid regexp')
+      return
+    }
+  }
   var replaceTerm = replaceTextField.stringValue()
   var selectionWithChildren = layersWithChildren(context.selection)
   var changes = []
