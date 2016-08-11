@@ -27,11 +27,16 @@ export function createAlert (title, message, iconFilePath) {
   return alert
 }
 
-export function createLabel (text, frame, fontSize) {
+export function createLabel (text, frame, fontSize, bold) {
   var label = NSTextField.alloc().initWithFrame(frame)
   label.setStringValue(text)
 
-  label.setFont(NSFont.boldSystemFontOfSize(fontSize))
+  if (bold) {
+    label.setFont(NSFont.boldSystemFontOfSize(fontSize))
+  } else {
+    label.setFont(NSFont.systemFontOfSize(fontSize))
+  }
+
 
   label.setBezeled(false)
   label.setDrawsBackground(false)
