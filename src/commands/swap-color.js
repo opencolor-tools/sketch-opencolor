@@ -16,20 +16,21 @@ export default function swapColor (context) {
     return
   }
 
-  var alert = createAlert('Swap Color', 'Find and Replaces all assigned color names', 'icon.png')
-  var listView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 60))
+  var alert = createAlert('Swap Color', 'Finds and replaces strings in assigned color names of all selected layers and their children. Updates the color values based on the new names.', 'icon.png')
+  var listView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 110))
 
-  var searchTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 30, 200, 22))
-  listView.addSubview(createLabel('Find', NSMakeRect(0, 30, 80, 22), 12, true))
+  var searchTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 74, 200, 22))
+  listView.addSubview(createLabel('Find', NSMakeRect(0, 74, 80, 22), 12, true))
+  listView.addSubview(createLabel('You can use regular expression. e.g. "/^." to replace the first character.', NSMakeRect(80, 38, 200, 32), 10, false))
   listView.addSubview(searchTextField)
 
-  var replaceTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 0, 200, 22))
-  listView.addSubview(createLabel('Replace', NSMakeRect(0, 0, 80, 22), 12, true))
+  var replaceTextField = NSTextField.alloc().initWithFrame(NSMakeRect(80, 10, 200, 22))
+  listView.addSubview(createLabel('Replace', NSMakeRect(0, 10, 80, 22), 12, true))
   listView.addSubview(replaceTextField)
 
   alert.addAccessoryView(listView)
 
-  alert.addButtonWithTitle('Find, Replace & Update Colors')
+  alert.addButtonWithTitle('Update Color Names and Values')
   alert.addButtonWithTitle('Cancel')
 
   var responseCode = alert.runModal()
@@ -38,6 +39,14 @@ export default function swapColor (context) {
   }
 
   var searchTerm = searchTextField.stringValue()
+  if (searchTerm.indexOf('/') === 0) {
+    try {
+      searchTerm = new RegExp(searchTerm.replace('/', ''))
+    } catch(e) {
+      context.document.showMessage('Invalid Regular Expression: "' + searchTerm.replace('/', '') + '"')
+      return
+    }
+  }
   var replaceTerm = replaceTextField.stringValue()
   var selectionWithChildren = layersWithChildren(context.selection)
   var changes = []
@@ -75,8 +84,8 @@ export default function swapColor (context) {
     }
   })
 
-  var title = `Swapped ${replacementCounts} values in ${changes.length} Layers (while searching in ${selectionWithChildren.length} layers).`
-  var details = 'Replacements:\n\n'
+  var title = `Found ${replacementCounts} values in ${changes.length} layers`
+  var details = `searching in ${selectionWithChildren.length} layers\n\nErrors\n\n`
   var errors = {}
 
   updateColors(context)
@@ -94,10 +103,10 @@ export default function swapColor (context) {
     context.document.showMessage(`🌈 ${title}`)
   } else {
     Object.keys(errors).forEach(function (key) {
-      details += key + '\n'
+      details += '🚨 Layer: ' + key + '\n\n'
       errors[key].forEach(function (replacementInfo) {
-        details += '🚨 ' + replacementInfo.error
-        details += ' › ' + replacementInfo.from + ' › ' + replacementInfo.to + '\n'
+        details += '· ' + replacementInfo.error
+        details += ': from "' + replacementInfo.from + '" to "' + replacementInfo.to + '"\n'
         details += '\n'
       })
       var alert = createAlert(title, details, 'icon.png')
