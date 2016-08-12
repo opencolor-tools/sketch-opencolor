@@ -55,6 +55,15 @@ export function getLinkedPaletteForObject (command, layer) {
   return getDefaultPalette()
 }
 
+function urlResolver (url, line) {
+  var ocoName = url.split('//')[1]
+  var ocoPalettePath = ocoCachePath() + '/' + ocoName + '.oco'
+  var ocoPaletteUrl = NSURL.fileURLWithPath(ocoPalettePath)
+  var ocoString = NSString.stringWithContentsOfFile(ocoPaletteUrl)
+
+  return ocoString
+}
+
 export function getOcoTreeForLayer (command, layer) {
   var ocoPalettePath = getLinkedPaletteForObject(command, layer)
   if (!ocoPalettePath) {
@@ -66,7 +75,7 @@ export function getOcoTreeForLayer (command, layer) {
   }
   var ocoPaletteUrl = NSURL.fileURLWithPath(ocoPalettePath)
   var ocoString = NSString.stringWithContentsOfFile(ocoPaletteUrl)
-  var tree = oco.parse(ocoString + '\n')
+  var tree = oco.parse(ocoString + '\n', urlResolver)
   return tree
 }
 

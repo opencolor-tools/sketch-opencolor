@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "lodash": "^4.9.0",
-    "opencolor": "^0.2.0",
+    "opencolor": "opencolor-tools/opencolor-js#5a8e923783296fa082b843aa9d52c143b5b3aa8d",
     "path": "^0.12.7",
     "sketch-color": "^0.1.1"
   },
