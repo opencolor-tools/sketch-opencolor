@@ -5,7 +5,22 @@ import { ocoFiles } from '../utils/oco'
 import { hasMSArray } from '../utils/sketch-deprecated'
 import { Entry, ColorValue, render } from 'opencolor'
 
+function makePathUpwards(child, parent, path) {
+  if (!path) {
+    path = []
+  }
+  if (child == parent) {
+    return path
+  } else {
+    var nextParent = child.parentGroup()
+    path.unshift(nextParent.name())
+    path = makePathUpwards(nextParent, parent, path);
+  }
+  return path
+}
+
 export default function exportFromArtboard (context) {
+  context.document.showMessage('Hello')
   var command = context.command
   let layer = context.selection.firstObject()
   if (!layer) {
@@ -17,28 +32,46 @@ export default function exportFromArtboard (context) {
     context.document.showMessage('⛈ Select an artboard first.')
     return
   }
+  
+  var rootName = artboard.name();
   var cachedPalettePath = command.valueForKey_onLayer('ocoPalette', artboard)
   if (!cachedPalettePath) {
-    cachedPalettePath = 'new-palette'
+    // if not oco-ified, use artboard name
+    cachedPalettePath =  rootName
   }
+
   // artboard
   var ocoPalette = new Entry()
 
   var children = artboard.children()
+  context.document.showMessage("children")
+  
   if (hasMSArray()) {
     children = arrayify(children).reverse()
   } else {
     children = children.reverse()
   }
+
+  log("Children" + children.length)
+
   children.forEach(function (child) {
     if (!child.isKindOfClass(MSShapeGroup)) {
+      log("Child (no shape): " + child.name())
       return
+
     }
     // var identit getIdentifyStyles(child)
     STYLE_TYPES.forEach((type) => {
       var dotPath = command.valueForKey_onLayer('oco_defines_' + type, child)
       if (!dotPath || dotPath == '') { // eslint-disable-line eqeqeq
-        return
+        // if no oco data exists, try to export fills (swatchlike)
+        if (type === 'fill') {
+          var path = makePathUpwards(child, artboard)
+          path.push(child.name())
+          dotPath = path.join('.')
+        } else {
+          return;
+        }
       }
       var colorValue = getStyleColor(child, type)
       var colorEntry = new Entry(dotPath.split('.').pop(), [ColorValue.fromColorValue(colorValue)], 'Color')
