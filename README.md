@@ -24,6 +24,10 @@ This plugin is open source. It is also shipped with Open Color Tools.
 
 --------------------------------------------------------------------------------
 
+## Usage
+
+See [Manual](MANUAL.md)
+
 ## Development
 
 This plugin is based on Sketch Fusion by [Andrey Shakhmin, @turbobabr](https://github.com/turbobabr), as presented at [#SketcHHackday 2016](http://designtoolshackday.com).
