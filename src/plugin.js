@@ -6,7 +6,7 @@ export const HKSketchFusionExtension = {
   description: 'Use Open Color in Sketch',
   author: 'Jan Krutisch, Florian Munz, Michael Schieben',
   authorEmail: 'info@opencolor.tools',
-  version: '1.8.5-beta',
+  version: '1.8.5',
   identifier: 'tools.opencolor.sketch.opencolor',
   menu: {
     'isRoot': false,
