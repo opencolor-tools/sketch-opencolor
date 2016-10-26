@@ -1,4 +1,4 @@
-import { COLOR_TYPES, getColorLookupForLayer } from '../utils/oco-sketch'
+import { SKETCH_PLUGIN_IDENTIFIER, COLOR_TYPES, getColorLookupForLayer } from '../utils/oco-sketch'
 import { createAlert, createLabel } from '../utils/sketch-ui'
 import { layersWithChildren } from '../utils/sketch-dom'
 import updateColors from './update-colors'
@@ -55,7 +55,7 @@ export default function swapColor (context) {
   selectionWithChildren.forEach(function (layer) {
     var replacements = []
     COLOR_TYPES.forEach(function (styleType) {
-      var existingValue = context.command.valueForKey_onLayer('oco_defines_' + styleType, layer)
+      var existingValue = context.command.valueForKey_onLayer_forPluginIdentifier('oco_defines_' + styleType, layer, SKETCH_PLUGIN_IDENTIFIER)
 
       if (!existingValue) {
         return
@@ -70,7 +70,7 @@ export default function swapColor (context) {
       if (Object.keys(colorLookup).indexOf(newValue) === -1) {
         info.error = 'Not in palette'
       } else {
-        context.command.setValue_forKey_onLayer(String(newValue), 'oco_defines_' + styleType, layer)
+        context.command.setValue_forKey_onLayer_forPluginIdentifier(String(newValue), 'oco_defines_' + styleType, layer, SKETCH_PLUGIN_IDENTIFIER)
       }
 
       replacements.push(info)

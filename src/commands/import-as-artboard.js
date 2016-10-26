@@ -1,4 +1,4 @@
-import { selectOcoFile } from '../utils/oco-sketch'
+import { SKETCH_PLUGIN_IDENTIFIER, selectOcoFile } from '../utils/oco-sketch'
 import { ocoCachePath } from '../utils/oco'
 import { parse } from 'opencolor'
 
@@ -19,7 +19,7 @@ export default function importAsArtboard (context) {
   var pathParts = result.split('/')
   var fileName = pathParts[pathParts.length - 1]
   artboard.setName(`${fileName} · Visual Colors`)
-  command.setValue_forKey_onLayer(String(result), 'ocoPalette', artboard)
+  command.setValue_forKey_onLayer_forPluginIdentifier(String(result), 'ocoPalette', artboard, SKETCH_PLUGIN_IDENTIFIER)
 
   var padding = 20
   var x = padding
@@ -41,7 +41,7 @@ export default function importAsArtboard (context) {
     fill.color = MSColor.colorWithSVGString(entry.hexcolor())
     artboard.addLayers([group])
 
-    command.setValue_forKey_onLayer(entry.path(), 'oco_defines_fill', group)
+    command.setValue_forKey_onLayer_forPluginIdentifier(entry.path(), 'oco_defines_fill', group, SKETCH_PLUGIN_IDENTIFIER)
 
     index++
   })

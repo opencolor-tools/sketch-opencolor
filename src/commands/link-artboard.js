@@ -1,4 +1,4 @@
-import { selectOcoFile } from '../utils/oco-sketch'
+import { SKETCH_PLUGIN_IDENTIFIER, selectOcoFile } from '../utils/oco-sketch'
 import { parentArtboardForObject } from '../utils/sketch-dom'
 
 export default function linkArtboard (context) {
@@ -8,10 +8,10 @@ export default function linkArtboard (context) {
   var artboard = parentArtboardForObject(layer)
 
   if (!artboard) { return }
-  var value = command.valueForKey_onLayer('ocoPalette', artboard)
+  var value = command.valueForKey_onLayer_forPluginIdentifier('ocoPalette', artboard, SKETCH_PLUGIN_IDENTIFIER)
 
   var result = selectOcoFile('Select a palette to connect to the current Artboard', 'Connect', '' + value, true)
   if (!result) { return }
 
-  command.setValue_forKey_onLayer(String(result), 'ocoPalette', artboard)
+  command.setValue_forKey_onLayer_forPluginIdentifier(String(result), 'ocoPalette', artboard, SKETCH_PLUGIN_IDENTIFIER)
 }

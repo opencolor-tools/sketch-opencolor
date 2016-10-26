@@ -1,5 +1,5 @@
 import { arrayify, parentArtboardForObject, getStyleColor } from '../utils/sketch-dom'
-import { STYLE_TYPES, getLibFolder, openApp } from '../utils/oco-sketch'
+import { SKETCH_PLUGIN_IDENTIFIER, STYLE_TYPES, getLibFolder, openApp } from '../utils/oco-sketch'
 import { createAlert, createLabel, createComboBox } from '../utils/sketch-ui'
 import { ocoFiles } from '../utils/oco'
 import { hasMSArray } from '../utils/sketch-deprecated'
@@ -32,9 +32,9 @@ export default function exportFromArtboard (context) {
     context.document.showMessage('⛈ Select an artboard first.')
     return
   }
-  
+
   var rootName = artboard.name();
-  var cachedPalettePath = command.valueForKey_onLayer('ocoPalette', artboard)
+  var cachedPalettePath = command.valueForKey_onLayer_forPluginIdentifier('ocoPalette', artboard, SKETCH_PLUGIN_IDENTIFIER)
   if (!cachedPalettePath) {
     // if not oco-ified, use artboard name
     cachedPalettePath =  rootName
@@ -45,7 +45,7 @@ export default function exportFromArtboard (context) {
 
   var children = artboard.children()
   context.document.showMessage("children")
-  
+
   if (hasMSArray()) {
     children = arrayify(children).reverse()
   } else {
@@ -62,7 +62,7 @@ export default function exportFromArtboard (context) {
     }
     // var identit getIdentifyStyles(child)
     STYLE_TYPES.forEach((type) => {
-      var dotPath = command.valueForKey_onLayer('oco_defines_' + type, child)
+      var dotPath = command.valueForKey_onLayer_forPluginIdentifier('oco_defines_' + type, child, SKETCH_PLUGIN_IDENTIFIER)
       if (!dotPath || dotPath == '') { // eslint-disable-line eqeqeq
         // if no oco data exists, try to export fills (swatchlike)
         if (type === 'fill') {

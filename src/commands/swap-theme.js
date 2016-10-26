@@ -1,4 +1,4 @@
-import { COLOR_TYPES, getOcoTreeForLayer } from '../utils/oco-sketch'
+import { SKETCH_PLUGIN_IDENTIFIER, COLOR_TYPES, getOcoTreeForLayer } from '../utils/oco-sketch'
 import { createAlert, createLabel, createSelect } from '../utils/sketch-ui'
 import { layersWithChildren } from '../utils/sketch-dom'
 import { getSignature } from '../utils/oco'
@@ -25,7 +25,7 @@ export default function swapTheme (context) {
   const requestedPaths = []
   layersWithChildren(context.selection).forEach(function (layer) {
     COLOR_TYPES.forEach(function (styleType) {
-      var entryName = '' + context.command.valueForKey_onLayer('oco_defines_' + styleType, layer)
+      var entryName = '' + context.command.valueForKey_onLayer_forPluginIdentifier('oco_defines_' + styleType, layer, SKETCH_PLUGIN_IDENTIFIER)
       if (!entryName) {
         return
       }
@@ -103,7 +103,7 @@ export default function swapTheme (context) {
   selectionWithChildren.forEach(function (layer) {
     var replacements = []
     COLOR_TYPES.forEach(function (styleType) {
-      var existingValue = context.command.valueForKey_onLayer('oco_defines_' + styleType, layer)
+      var existingValue = context.command.valueForKey_onLayer_forPluginIdentifier('oco_defines_' + styleType, layer, SKETCH_PLUGIN_IDENTIFIER)
 
       if (!existingValue) {
         return
@@ -130,7 +130,7 @@ export default function swapTheme (context) {
       }
 
       info.to = newValue
-      context.command.setValue_forKey_onLayer(String(newValue), 'oco_defines_' + styleType, layer)
+      context.command.setValue_forKey_onLayer_forPluginIdentifier(String(newValue), 'oco_defines_' + styleType, layer, SKETCH_PLUGIN_IDENTIFIER)
 
       replacements.push(info)
     })

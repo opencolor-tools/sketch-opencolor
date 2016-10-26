@@ -1,4 +1,4 @@
-import { selectOcoFile } from '../utils/oco-sketch'
+import { SKETCH_PLUGIN_IDENTIFIER, selectOcoFile } from '../utils/oco-sketch'
 import { ocoCachePath } from '../utils/oco'
 import { arrayify } from '../utils/sketch-dom'
 import { notifyTutorial } from '../utils/oco-tutorial'
@@ -40,7 +40,7 @@ export default function importAsDocumentColors (context) {
 
   // save on each existing page (as ist not possible to store user data on document)
   arrayify(context.document.pages()).forEach(function (page) {
-    context.command.setValue_forKey_onLayer(String(result), 'ocoPalette', page)
+    context.command.setValue_forKey_onLayer_forPluginIdentifier(String(result), 'ocoPalette', page, SKETCH_PLUGIN_IDENTIFIER)
   })
 
   NSApp.delegate().refreshCurrentDocument()
