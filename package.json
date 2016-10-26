@@ -1,6 +1,6 @@
 {
   "name": "opencolor-tools-sketch-plugin",
-  "version": "1.8.4-beta",
+  "version": "1.8.5-beta",
   "description": "A sketch plugin to support the open color file format",
   "author": "Open Color Tools Team",
   "authorEmail": "info@opencolor.tools",

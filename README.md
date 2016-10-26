@@ -11,17 +11,22 @@ This plugin supports designers who want to use meaningful color palettes defined
 ## Features
 
 - [x] Import oco files as document colors
-- [ ] Save document colors as oco file
+- [x] Save document colors as oco file
 - [x] Identify Color Name (Fill, Border, Shadow)
 - [x] Import oco files as swatches into artboard
+- [x] Export an Artboard containing swatches as oco
 - [x] Edit color names and colors inside sketch
 - [x] Export oco files
 
 --------------------------------------------------------------------------------
 
-This plugin is open source. It will be shipped with Open Color Tools.
+This plugin is open source. It is also shipped with Open Color Tools.
 
 --------------------------------------------------------------------------------
+
+## Usage
+
+See [Manual](MANUAL.md)
 
 ## Development
 
