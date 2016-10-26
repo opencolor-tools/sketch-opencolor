@@ -13,6 +13,17 @@ var expandTilde = require('expand-tilde');
 var release = require('gulp-github-release');
 var zip = require('gulp-zip');
 
+var minimist = require('minimist');
+
+var knownOptions = {
+  string: 'target',
+  default: { target: 'production' }
+};
+
+var options = minimist(process.argv.slice(2), knownOptions);
+
+console.log("Gulp is setup for target: " + options.target);
+
 var SKETCH_PLUGINS_FOLDER = path.join(expandTilde('~'),'/Library/Application Support/com.bohemiancoding.sketch3/Plugins');
 
 var ManifestProcessorOptions = {
@@ -47,6 +58,15 @@ gulp.task('clean', function () {
 
 gulp.task('prepare-manifest',function(callback) {
     var manifest = extractManifestObject();
+
+    // manipulate manifest for sketch
+    if (options.target === 'beta') {
+      manifest.version = manifest.version + '-beta';
+      manifest.identifier = manifest.identifier + '-beta';
+      manifest.bundleName = manifest.bundleName + manifest.version;
+      manifest.name = manifest.name + ' (' + manifest.version + ')';
+    }
+
     fse.outputJsonSync(path.join(__dirname,'build/manifest.json'),manifest);
     currentManifest = manifest;
     callback(null);
