@@ -1,6 +1,6 @@
 {
   "name": "opencolor-tools-sketch-plugin",
-  "version": "1.8.5",
+  "version": "1.8.6-beta2",
   "description": "A sketch plugin to support the open color file format",
   "author": "Open Color Tools Team",
   "authorEmail": "info@opencolor.tools",
@@ -36,7 +36,8 @@
     "lodash": "^4.9.0",
     "opencolor": "^0.2.0",
     "path": "^0.12.7",
-    "sketch-color": "^0.1.1"
+    "sketch-color": "^0.1.1",
+    "tinycolor2": "^1.4.1"
   },
   "standard": {
     "ignore": [

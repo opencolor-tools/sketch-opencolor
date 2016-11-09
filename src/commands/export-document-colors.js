@@ -47,9 +47,9 @@ export default function exportFromArtboard (context) {
     colors = arrayify(colors)
   } else {
     if (context.document.documentData().assets().primitiveColors) {
-      colors = context.document.documentData().assets().primitiveColors();
+      colors = context.document.documentData().assets().primitiveColors()
     } else {
-      colors = context.document.documentData().assets().colors();
+      colors = context.document.documentData().assets().colors()
     }
   }
   var usedNames = {}

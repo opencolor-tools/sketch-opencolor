@@ -1,5 +1,6 @@
 import { selectOcoFile } from '../utils/oco-sketch'
-import { ocoCachePath } from '../utils/oco'
+import { ocoCachePath } from '../utils/oco'
+import { colorFromHex } from '../utils/sketch-dom'
 import { parse } from 'opencolor'
 
 const FILL = 0
@@ -38,7 +39,7 @@ export default function importAsArtboard (context) {
     rect.setNameIsFixed(true)
     var group = MSShapeGroup.shapeWithPath(rect)
     var fill = group.style().addStylePartOfType(FILL)
-    fill.color = MSColor.colorWithSVGString(entry.hexcolor())
+    fill.color = colorFromHex(entry.hexcolor())
     artboard.addLayers([group])
 
     command.setValue_forKey_onLayer(entry.path(), 'oco_defines_fill', group)

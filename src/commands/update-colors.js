@@ -1,5 +1,5 @@
 import { COLOR_TYPES, getOcoTreeForLayer } from '../utils/oco-sketch'
-import { layersWithChildren, setStyleColor } from '../utils/sketch-dom'
+import { layersWithChildren, setStyleColor, colorFromHex } from '../utils/sketch-dom'
 
 export default function updateLinkedColors (context) {
   if (!context.selection.count()) {
@@ -31,7 +31,7 @@ export default function updateLinkedColors (context) {
         }
       }
       if (styleType == 'text') { // eslint-disable-line eqeqeq
-        layer.setTextColor(MSColor.colorWithSVGString(entry.hexcolor()))
+        layer.setTextColor(colorFromHex(entry.hexcolor()))
       } else {
         setStyleColor(layer, styleType, entry.hexcolor())
       }

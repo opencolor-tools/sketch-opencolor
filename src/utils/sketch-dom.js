@@ -1,3 +1,5 @@
+import tinycolor from 'tinycolor2'
+
 export function arrayify (items) {
   if (!items) {
     return []
@@ -41,10 +43,28 @@ export function parentArtboardForObject (object) {
 
 function getStyle (layer, styleType) {
   var style = layer.style()
-  if (!style[styleType]) {
+  if (style[styleType]) {
+    return style[styleType]()
+  } else if (style[styleType + 's']) {
+    return style[styleType + 's']()[0]
+  }
+  return null
+}
+
+export function hexColor (color) {
+  if (color) {
+    return tinycolor.fromRatio({r: color.red(), g: color.green(), b: color.blue()}).toHexString().toUpperCase()
+  } else {
     return null
   }
-  return style[styleType]()
+}
+
+export function colorFromHex (hex) {
+  if (hex) {
+    var color = tinycolor(hex).toRgb()
+    return MSColor.colorWithRed_green_blue_alpha(color.r / 255, color.g / 255, color.b / 255, 1.0)
+  }
+  return null
 }
 
 // styleType: one of fill, border, innerShadow
@@ -53,7 +73,12 @@ export function getStyleColor (layer, styleType) {
   if (!style) {
     return null
   }
-  return '#' + style.color().hexValue()
+  if (style['color']) {
+    return hexColor(style.color())
+  } else if (style['colorGeneric']) {
+    return hexColor(style.colorGeneric())
+  }
+  return null
 }
 
 export function setStyleColor (layer, styleType, hexValue) {
@@ -61,7 +86,7 @@ export function setStyleColor (layer, styleType, hexValue) {
   if (!style[styleType]) {
     return null
   }
-  style[styleType]().color = MSColor.colorWithSVGString(hexValue)
+  style[styleType]().color = colorFromHex(hexValue)
 }
 
 export function findLayersInLayer (rootLayer, name, exactMatch, type, subLayersOnly, layersToExclude) {

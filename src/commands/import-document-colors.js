@@ -1,6 +1,6 @@
 import { selectOcoFile } from '../utils/oco-sketch'
 import { ocoCachePath } from '../utils/oco'
-import { arrayify } from '../utils/sketch-dom'
+import { arrayify, colorFromHex } from '../utils/sketch-dom'
 import { notifyTutorial } from '../utils/oco-tutorial'
 import { hasMSArray } from '../utils/sketch-deprecated'
 import { parse } from 'opencolor'
@@ -24,7 +24,7 @@ export default function importAsDocumentColors (context) {
   function traverseTree (subtree) {
     subtree.children.forEach(function (entry) {
       if (entry.type == 'Color') { // eslint-disable-line eqeqeq
-        colors.push(MSColor.colorWithSVGString(entry.hexcolor()))
+        colors.push(colorFromHex(entry.hexcolor()))
       } else if (entry.type == 'Palette') { // eslint-disable-line eqeqeq
         traverseTree(entry)
       }

@@ -1,5 +1,5 @@
 import { COLOR_TYPES, STYLE_ICONS, getNameLookupForLayer } from '../utils/oco-sketch'
-import { getStyleColor } from '../utils/sketch-dom'
+import { getStyleColor, hexColor } from '../utils/sketch-dom'
 import { notifyTutorial } from '../utils/oco-tutorial'
 
 export function identifyAll (context) {
@@ -33,7 +33,7 @@ function identifyColors (context, types) {
 
   var identifiedStyles = []
   if (shouldIdentifyText && layer.isKindOfClass(MSTextLayer.class())) {
-    var color = '#' + layer.textColor().hexValue()
+    var color = hexColor(layer.textColor())
     if (color && nameLookup[color]) {
       identifiedStyles.push({
         'type': 'text',
@@ -56,7 +56,7 @@ function identifyColors (context, types) {
 
   if (identifiedStyles.length > 0) {
     var str = ''
-    var info = identifiedStyles.map((style) => {
+    var info = identifiedStyles.map((style) => { // eslint-disable-line no-unused-vars
       str += STYLE_ICONS[style.type] + ' ' + style.type.toUpperCase() + ': '
       return style.colors.map((color) => {
         str += color.path + ' '
