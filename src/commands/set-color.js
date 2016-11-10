@@ -1,5 +1,5 @@
 import { SKETCH_PLUGIN_IDENTIFIER, STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer, getLinkedPaletteForObject } from '../utils/oco-sketch'
-import { getStyleColor, arrayify } from '../utils/sketch-dom'
+import { getStyleColor, arrayify, hexColor } from '../utils/sketch-dom'
 import { getName } from '../utils/oco'
 import { createAlert, createComboBox, createLabel } from '../utils/sketch-ui'
 import updateColors from './update-colors'
@@ -16,7 +16,7 @@ export default function setColor (context) {
 
   var identifiedStyles = []
   if (layer.isKindOfClass(MSTextLayer.class())) {
-    var color = '#' + layer.textColor().hexValue()
+    var color = hexColor(layer.textColor())
     if (color) {
       identifiedStyles.push({
         'type': 'text',

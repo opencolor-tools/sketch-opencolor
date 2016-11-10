@@ -5,16 +5,16 @@ import { ocoFiles } from '../utils/oco'
 import { hasMSArray } from '../utils/sketch-deprecated'
 import { Entry, ColorValue, render } from 'opencolor'
 
-function makePathUpwards(child, parent, path) {
+function makePathUpwards (child, parent, path) {
   if (!path) {
     path = []
   }
-  if (child == parent) {
+  if (child == parent) { // eslint-disable-line eqeqeq
     return path
   } else {
     var nextParent = child.parentGroup()
     path.unshift(nextParent.name())
-    path = makePathUpwards(nextParent, parent, path);
+    path = makePathUpwards(nextParent, parent, path)
   }
   return path
 }
@@ -35,9 +35,10 @@ export default function exportFromArtboard (context) {
 
   var rootName = artboard.name();
   var cachedPalettePath = command.valueForKey_onLayer_forPluginIdentifier('ocoPalette', artboard, SKETCH_PLUGIN_IDENTIFIER)
+
   if (!cachedPalettePath) {
     // if not oco-ified, use artboard name
-    cachedPalettePath =  rootName
+    cachedPalettePath = rootName
   }
 
   // artboard
@@ -52,15 +53,10 @@ export default function exportFromArtboard (context) {
     children = children.reverse()
   }
 
-  log("Children" + children.length)
-
   children.forEach(function (child) {
     if (!child.isKindOfClass(MSShapeGroup)) {
-      log("Child (no shape): " + child.name())
       return
-
     }
-    // var identit getIdentifyStyles(child)
     STYLE_TYPES.forEach((type) => {
       var dotPath = command.valueForKey_onLayer_forPluginIdentifier('oco_defines_' + type, child, SKETCH_PLUGIN_IDENTIFIER)
       if (!dotPath || dotPath == '') { // eslint-disable-line eqeqeq
@@ -70,7 +66,7 @@ export default function exportFromArtboard (context) {
           path.push(child.name())
           dotPath = path.join('.')
         } else {
-          return;
+          return
         }
       }
       var colorValue = getStyleColor(child, type)
