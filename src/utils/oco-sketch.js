@@ -3,6 +3,7 @@ import { createAlert, createSelect, createLabel } from './sketch-ui'
 import { parentArtboardForObject, parentPageForObject } from './sketch-dom'
 import * as oco from 'opencolor'
 
+export const SKETCH_PLUGIN_IDENTIFIER = 'tools.opencolor.sketch.opencolor';
 export const STYLE_TYPES = ['fill', 'border', 'shadow', 'innerShadow']
 export const COLOR_TYPES = STYLE_TYPES.concat(['text'])
 export const STYLE_ICONS = {
@@ -38,7 +39,7 @@ export function getLinkedPaletteForObject (command, layer) {
 
   var artboard = parentArtboardForObject(layer)
   if (artboard) {
-    ocoPalettePath = command.valueForKey_onLayer('ocoPalette', artboard)
+    ocoPalettePath = command.valueForKey_onLayer_forPluginIdentifier('ocoPalette', artboard, SKETCH_PLUGIN_IDENTIFIER)
   }
 
   if (ocoPalettePath) {
@@ -46,7 +47,7 @@ export function getLinkedPaletteForObject (command, layer) {
   }
   var page = parentPageForObject(artboard)
   if (page) {
-    ocoPalettePath = command.valueForKey_onLayer('ocoPalette', page)
+    ocoPalettePath = command.valueForKey_onLayer_forPluginIdentifier('ocoPalette', page, SKETCH_PLUGIN_IDENTIFIER)
   }
 
   if (ocoPalettePath) {

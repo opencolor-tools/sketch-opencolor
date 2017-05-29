@@ -1,4 +1,4 @@
-import { STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer, getLinkedPaletteForObject } from '../utils/oco-sketch'
+import { SKETCH_PLUGIN_IDENTIFIER, STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer, getLinkedPaletteForObject } from '../utils/oco-sketch'
 import { getStyleColor, arrayify, hexColor } from '../utils/sketch-dom'
 import { getName } from '../utils/oco'
 import { createAlert, createComboBox, createLabel } from '../utils/sketch-ui'
@@ -58,7 +58,7 @@ export default function setColor (context) {
     var values = [''].concat(definedNames)
     var selectedValue = null
 
-    var existingValue = command.valueForKey_onLayer('oco_defines_' + style.type, layer)
+    var existingValue = command.valueForKey_onLayer_forPluginIdentifier('oco_defines_' + style.type, layer, SKETCH_PLUGIN_IDENTIFIER)
 
     let saveIndicator = ''
     if (existingValue && existingValue != '') { // eslint-disable-line eqeqeq
@@ -97,7 +97,7 @@ export default function setColor (context) {
     }
 
     arrayify(context.selection).forEach(function (layer) {
-      command.setValue_forKey_onLayer(String(value), 'oco_defines_' + style.type, layer)
+      command.setValue_forKey_onLayer_forPluginIdentifier(String(value), 'oco_defines_' + style.type, layer, SKETCH_PLUGIN_IDENTIFIER)
     })
   })
 
