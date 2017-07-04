@@ -1,65 +1,56 @@
-var gulp = require('gulp');
-var browserify = require('browserify');
-var babelify = require('babelify');
-var source = require('vinyl-source-stream');
-var fs = require('fs');
-var path = require('path');
-var runSequence = require('run-sequence');
-var del = require('del');
-var async = require('async');
-var fse = require('fs-extra');
-var expandTilde = require('expand-tilde');
+var gulp = require('gulp')
+var browserify = require('browserify')
+var babelify = require('babelify')
+var source = require('vinyl-source-stream')
+var fs = require('fs')
+var path = require('path')
+var runSequence = require('run-sequence')
+var del = require('del')
+var async = require('async')
+var fse = require('fs-extra')
+var expandTilde = require('expand-tilde')
+var rename = require("gulp-rename")
 
-var release = require('gulp-github-release');
-var zip = require('gulp-zip');
+var release = require('gulp-github-release')
+var zip = require('gulp-zip')
 
-var minimist = require('minimist');
+var minimist = require('minimist')
 
-
-//used to get dynamically generated menus from extensions
 import * as pluginDefinition from './src/plugin'
-
 
 var knownOptions = {
   string: 'target',
   default: { target: 'production' }
-};
+}
 
-var options = minimist(process.argv.slice(2), knownOptions);
+var options = minimist(process.argv.slice(2), knownOptions)
 
-console.log("Gulp is setup for target: " + options.target);
+console.log('Gulp is setup for target: ' + options.target)
 
-var SKETCH_PLUGINS_FOLDER = path.join(expandTilde('~'),'/Library/Application Support/com.bohemiancoding.sketch3/Plugins');
+var SKETCH_PLUGINS_FOLDER = path.join(expandTilde('~'), '/Library/Application Support/com.bohemiancoding.sketch3/Plugins')
 
 var ManifestProcessorOptions = {
-    pluginManifestDescriberName: 'HKSketchFusionExtension',
-    startingManifestTag: '__$begin_of_manifest_\n',
-    endingManifestTag: '__$end_of_manifest_\n',
-    scriptFileName: 'plugin.js',
-    globalVarName: '__globals'
-};
+  pluginManifestDescriberName: 'HKSketchFusionExtension',
+  startingManifestTag: '__$begin_of_manifest_\n',
+  endingManifestTag: '__$end_of_manifest_\n',
+  scriptFileName: 'plugin.js',
+  globalVarName: '__globals'
+}
 
-var currentManifest = {};
-
+var currentManifest = {}
 
 gulp.task('evaluatePluginDefinition', function () {
 
-  console.log('EVALUATING PLUGIN DEFINITION');
+  var pluginDefinitionSource = fs.readFileSync(path.join(__dirname, 'src', ManifestProcessorOptions.scriptFileName), 'utf8')
 
-  var pluginDefinitionSource = fs.readFileSync(path.join(__dirname,'src', ManifestProcessorOptions.scriptFileName),'utf8')
-
-  fs.writeFileSync(path.join(__dirname,'src', 'pluginSource.js'), pluginDefinitionSource, 'utf8')
-
-  console.log(pluginDefinitionSource);
-
-  //create extension menus string
+  // create extension menus string
   var extensionMenusJSString = ''
   pluginDefinition.extensionMenus.forEach((extensionMenu) => {
-    extensionMenusJSString += `{title:'${extensionMenu.title}', items:[${extensionMenu.items.map((item) => "'" + item +  "'").join(',')}]},`
+    extensionMenusJSString += `{title:'${extensionMenu.title}', items:[${extensionMenu.items.map((item) => "'" + item + "'").join(',')}]},`
   })
   extensionMenusJSString += `'-',`
 
-  //create extension commands string
+  // create extension commands string
   var extensionCommandsJSString = ''
   Object.keys(pluginDefinition.extensionCommands).forEach((extensionCommandId) => {
     var command = pluginDefinition.extensionCommands[extensionCommandId]
@@ -68,163 +59,153 @@ gulp.task('evaluatePluginDefinition', function () {
 
   var newPluginDefinitionSource = pluginDefinitionSource.replace("'EXT_MENUS',", extensionMenusJSString).replace("'EXT_COMMANDS': null", extensionCommandsJSString)
 
-  fs.writeFileSync(path.join(__dirname,'src', 'plugin.js'), newPluginDefinitionSource, 'utf8')
-});
+  fs.writeFileSync(path.join(__dirname, 'src', 'pluginDefinition.js'), newPluginDefinitionSource, 'utf8')
+})
 
+gulp.task('cleanPluginDefinition', function () {
 
-gulp.task('restorePluginSource', function () {
+  fse.remove(path.join(__dirname, 'src', 'pluginDefinition.js'))
+})
 
-  var pluginDefinitionSource = fs.readFileSync(path.join(__dirname,'src', 'pluginSource.js'),'utf8')
+function extractManifestObject () {
+  var data = fs.readFileSync(path.join(__dirname, 'build', ManifestProcessorOptions.scriptFileName), 'utf8')
+  var startTag = ManifestProcessorOptions.startingManifestTag
+  var endTag = ManifestProcessorOptions.endingManifestTag
 
-  fs.writeFileSync(path.join(__dirname,'src', 'plugin.js'), pluginDefinitionSource, 'utf8')
-});
+  var startIndex = data.indexOf(startTag)
+  var endIndex = data.indexOf(endTag)
 
+  if (startIndex === -1 || endIndex === -1) {
+    return
+  }
 
-function extractManifestObject() {
-
-    var data = fs.readFileSync(path.join(__dirname,'build',ManifestProcessorOptions.scriptFileName),'utf8');
-    var startTag = ManifestProcessorOptions.startingManifestTag;
-    var endTag = ManifestProcessorOptions.endingManifestTag;
-
-    var startIndex = data.indexOf(startTag);
-    var endIndex = data.indexOf(endTag);
-
-    if(startIndex === -1 || endIndex === -1) {
-        return;
-    }
-
-    return JSON.parse(data.substring(startIndex+startTag.length,endIndex));
+  return JSON.parse(data.substring(startIndex + startTag.length, endIndex))
 }
 
 gulp.task('clean', function () {
-    return del(['build/**','dist/**', 'src/evaluatedPlugin.js']);
-});
+  return del(['build/**', 'dist/**'])
+})
 
-gulp.task('prepare-manifest',function(callback) {
-
-    var manifest = extractManifestObject();
+gulp.task('prepare-manifest', function (callback) {
+  var manifest = extractManifestObject()
 
     // manipulate manifest for sketch
-    if (options.target === 'beta') {
-      manifest.version = manifest.version + '-beta';
-      manifest.identifier = manifest.identifier + '-beta';
-      manifest.bundleName = manifest.bundleName + manifest.version;
-      manifest.name = manifest.name + ' (' + manifest.version + ')';
+  if (options.target === 'beta') {
+    manifest.version = manifest.version + '-beta'
+    manifest.identifier = manifest.identifier + '-beta'
+    manifest.bundleName = manifest.bundleName + manifest.version
+    manifest.name = manifest.name + ' (' + manifest.version + ')'
+  }
+
+  fse.outputJsonSync(path.join(__dirname, 'build/manifest.json'), manifest)
+  currentManifest = manifest
+  callback(null)
+})
+
+gulp.task('prepare-folders', function (callback) {
+  async.parallel({
+    build: function (callback) {
+      fse.ensureDir(path.join(__dirname, 'build'), callback)
+    },
+    dist: function (callback) {
+      fse.ensureDir(path.join(__dirname, 'dist'), callback)
     }
+  }, callback)
+})
 
-    fse.outputJsonSync(path.join(__dirname,'build/manifest.json'),manifest);
-    currentManifest = manifest;
-    callback(null);
-});
+gulp.task('assemble-plugin-bundle', function (callback) {
+  function normalizePluginFileName (name) {
+    return name
+  }
 
-gulp.task('prepare-folders',function(callback) {
-    async.parallel({
-        build: function(callback) {
-            fse.ensureDir(path.join(__dirname,'build'),callback);
-        },
-        dist: function(callback) {
-            fse.ensureDir(path.join(__dirname,'dist'),callback);
-        }
-    },callback);
-});
+  var bundlePath = path.join(__dirname, 'dist', normalizePluginFileName(currentManifest.bundleName || currentManifest.name) + '.sketchplugin')
 
+  async.parallel({
+    manifest: function (callback) {
+      fse.outputJson(path.join(bundlePath, 'Contents', 'Sketch', 'manifest.json'), currentManifest, callback)
+    },
+    runtime: function (callback) {
+      var script = fs.readFileSync(path.join(__dirname, 'build', ManifestProcessorOptions.scriptFileName), 'utf8')
+      script = ['var ' + ManifestProcessorOptions.globalVarName + ' = this;', script].join('')
 
-gulp.task('assemble-plugin-bundle',function(callback) {
-
-    function normalizePluginFileName(name) {
-        return name;
+      fse.outputFile(path.join(bundlePath, 'Contents', 'Sketch', ManifestProcessorOptions.scriptFileName), script, callback)
     }
+  }, function (err, data) {
+    callback(null)
+  })
+})
 
-    //TODO fix next line
+gulp.task('assemble-plugin-resources', function (callback) {
+  function normalizePluginFileName (name) {
+    return name
+  }
 
-    var bundlePath = path.join(__dirname,'dist',normalizePluginFileName(currentManifest.bundleName || currentManifest.name) + '.sketchplugin');
+  return gulp.src('src/resources/**/*.*')
+        .pipe(gulp.dest(path.join(__dirname, 'dist', normalizePluginFileName(currentManifest.bundleName || currentManifest.name) + '.sketchplugin', 'Contents/Resources')))
+})
 
-    async.parallel({
-        manifest: function(callback) {
-            fse.outputJson(path.join(bundlePath,'Contents','Sketch','manifest.json'),currentManifest,callback);
-        },
-        runtime: function(callback) {
-            var script = fs.readFileSync(path.join(__dirname,'build',ManifestProcessorOptions.scriptFileName),'utf8');
-            script = ["var "+ManifestProcessorOptions.globalVarName+" = this;",script].join("");
+gulp.task('install-plugin', function () {
+  return gulp.src('dist/**/*.*')
+        .pipe(gulp.dest(SKETCH_PLUGINS_FOLDER))
+})
 
-            fse.outputFile(path.join(bundlePath,'Contents','Sketch',ManifestProcessorOptions.scriptFileName),script,callback);
-        }
-    },function(err,data) {
-        callback(null);
-    });
-});
+gulp.task('build', function (callback) {
+  runSequence('clean', 'prepare-folders', 'evaluatePluginDefinition', 'bundle', 'prepare-manifest', 'assemble-plugin-bundle', 'assemble-plugin-resources', 'cleanPluginDefinition', 'install-plugin', callback)
+})
 
-gulp.task('assemble-plugin-resources',function(callback) {
-    function normalizePluginFileName(name) {
-        return name;
-    }
+gulp.task('bundle', function () {
+  var filePath = './src/pluginDefinition.js'
+  var extensions = ['.js']
 
-    return gulp.src('src/resources/**/*.*')
-        .pipe(gulp.dest(path.join(__dirname,'dist',normalizePluginFileName(currentManifest.bundleName || currentManifest.name)+'.sketchplugin','Contents/Resources')));
-});
+  var bundler = browserify({
+    entries: [filePath],
+    extensions: extensions,
+    debug: false
+  })
 
-gulp.task('install-plugin',function(){
-    return gulp.src("dist/**/*.*")
-        .pipe(gulp.dest(SKETCH_PLUGINS_FOLDER));
-});
+  bundler.transform(babelify.configure({
+    presets: ['es2015'],
+    plugins: [['babel-plugin-sketch-manifest-processor', ManifestProcessorOptions]]
+  }))
 
-gulp.task('build',function(callback) {
-    runSequence('clean','prepare-folders', 'evaluatePluginDefinition', 'bundle','prepare-manifest','assemble-plugin-bundle','assemble-plugin-resources', 'restorePluginSource', 'install-plugin',callback);
-});
+  return bundler.bundle()
+        .pipe(source('pluginDefinition.js'))
+        .pipe(rename("plugin.js"))
+        .pipe(gulp.dest('./build/'))
+})
 
-gulp.task('bundle',function() {
-    var filePath = './src/plugin.js';
-    var extensions = ['.js'];
+gulp.task('watch', function () {
+  runSequence('build', function () {
+    gulp.watch(['./src/**/*.*', '!./src/pluginDefinition.js'], function () {
+      console.log('Watching...')
+      runSequence('clean', 'build', function () {
+        console.log('Rebuild complete!')
+      })
+    })
+  })
+})
 
-    var bundler = browserify({
-        entries: [filePath],
-        extensions: extensions,
-        debug: false
-    });
+gulp.task('default', function (callback) {
+  runSequence('build', callback)
+})
 
-    bundler.transform(babelify.configure({
-        presets: ["es2015"],
-        plugins: [["babel-plugin-sketch-manifest-processor",ManifestProcessorOptions]]
-    }));
-
-    return bundler.bundle()
-        .pipe(source('plugin.js'))
-        .pipe(gulp.dest('./build/'));
-});
-
-
-gulp.task('watch', function(){
-    runSequence('build', function() {
-        gulp.watch('./src/**/*.*',function() {
-            console.log("Watching...");
-            runSequence('clean','build',function(){
-                console.log("Rebuild complete!");
-            });
-        });
-    });
-});
-
-gulp.task('default',function(callback) {
-    runSequence('build', callback);
-});
-
-gulp.task('zip', ['build'], function() {
+gulp.task('zip', ['build'], function () {
   return gulp.src('./dist/*.sketchplugin/**/*')
     .pipe(zip('OpenColor-SketchPlugin.zip'))
     .pipe(gulp.dest('dist'))
-});
+})
 
-gulp.task('release', ['zip'], function() {
+gulp.task('release', ['zip'], function () {
   return gulp.src('./dist/OpenColor-SketchPlugin.zip')
     .pipe(release({
-      //token: 'token',                     // or you can set an env var called GITHUB_TOKEN instead
+      // token: 'token',                     // or you can set an env var called GITHUB_TOKEN instead
       owner: 'opencolor-tools',                    // if missing, it will be extracted from manifest (the repository.url field)
       repo: 'sketch-opencolor',            // if missing, it will be extracted from manifest (the repository.url field)
-      //tag: 'v1.0.0',                      // if missing, the version will be extracted from manifest and prepended by a 'v'
-      //name: 'publish-release v1.0.0',     // if missing, it will be the same as the tag
-      //notes: 'very good!',                // if missing it will be left undefined
+      // tag: 'v1.0.0',                      // if missing, the version will be extracted from manifest and prepended by a 'v'
+      // name: 'publish-release v1.0.0',     // if missing, it will be the same as the tag
+      // notes: 'very good!',                // if missing it will be left undefined
       draft: false,                       // if missing it's false
       prerelease: true,                  // if missing it's false
       manifest: require('./build/manifest.json') // package.json from which default values will be extracted if they're missing
-    }));
-});
+    }))
+})
