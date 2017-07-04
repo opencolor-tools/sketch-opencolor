@@ -43,7 +43,6 @@ var currentManifest = {};
 
 
 gulp.task('evaluatePluginDefinition', function () {
-  if(!pluginDefinition || !pluginDefinition.extensionMenus) return
 
   console.log('EVALUATING PLUGIN DEFINITION');
 
@@ -58,12 +57,13 @@ gulp.task('evaluatePluginDefinition', function () {
   pluginDefinition.extensionMenus.forEach((extensionMenu) => {
     extensionMenusJSString += `{title:'${extensionMenu.title}', items:[${extensionMenu.items.map((item) => "'" + item +  "'").join(',')}]},`
   })
+  extensionMenusJSString += `'-',`
 
   //create extension commands string
   var extensionCommandsJSString = ''
   Object.keys(pluginDefinition.extensionCommands).forEach((extensionCommandId) => {
     var command = pluginDefinition.extensionCommands[extensionCommandId]
-    extensionCommandsJSString += `${extensionCommandId}: {name: '${command.name}', shortcut: '${command.shortcut}', run: extensions[${pluginDefinition.commandExtensions[extensionCommandId]}].commands.${extensionCommandId}},`
+    extensionCommandsJSString += `${extensionCommandId}: {name: '${command.name}', shortcut: '${command.shortcut}', run: _extensionCommands.${extensionCommandId}.run},`
   })
 
   var newPluginDefinitionSource = pluginDefinitionSource.replace("'EXT_MENUS',", extensionMenusJSString).replace("'EXT_COMMANDS': null", extensionCommandsJSString)

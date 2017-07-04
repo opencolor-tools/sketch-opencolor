@@ -2,33 +2,31 @@ import * as commands from './commands'
 import extensions from './extensions'
 
 let _extensionCommands = {}
+let _commandExtensions = {}
 let _extensionMenus = []
 
-//build menu and commands for extensions
-extensions.forEach((extension) => {
+// build menu and commands for extensions
+Object.keys(extensions).forEach((extensionIdentifier) => {
+  let extension = extensions[extensionIdentifier]
 
-    let menu = Object.assign({}, extension.menu)
-    let qualifiedMenuItems = []
+  let menu = Object.assign({}, extension.menu)
+  let qualifiedMenuItems = []
 
-    extension.menu.items.forEach((menuItemTitle) => {
+  extension.menu.items.forEach((menuItemTitle) => {
+      // get qualified command identifier
+    let fullItemTitle = extension.identifier + menuItemTitle
 
-      //get qualified command identifier
-      let fullItemTitle = extension.identifier + menuItemTitle
+      // add command with qualified name
+    _extensionCommands[fullItemTitle] = extension.commands[menuItemTitle]
 
-      //add command with qualified name
-      _extensionCommands[fullItemTitle] = extension.commands[menuItemTitle]
+      // add to menu
+    qualifiedMenuItems.push(fullItemTitle)
+  })
 
-      //add to menu
-      qualifiedMenuItems.push(fullItemTitle)
-    })
+  menu.items = qualifiedMenuItems
 
-    menu.items = qualifiedMenuItems
-
-    _extensionMenus.push(menu)
+  _extensionMenus.push(menu)
 })
-
-export const extensionCommands = _extensionCommands
-export const extensionMenus = _extensionMenus
 
 export const HKSketchFusionExtension = {
   name: 'Open Color',
@@ -41,7 +39,7 @@ export const HKSketchFusionExtension = {
   menu: {
     'isRoot': false,
     'items': [
-      'EXT_MENUS',
+      {title:'Enfore Color Config', items:['enforestats']},'-',
       'linkArtboard',
       'setColor',
       'identifyColor',
@@ -159,6 +157,10 @@ export const HKSketchFusionExtension = {
       shortcut: '',
       run: commands.openApp
     },
-    'EXT_COMMANDS': null
+    enforestats: {name: 'Stats', shortcut: '', run: _extensionCommands.enforestats.run},
   }
 }
+
+export const extensionCommands = _extensionCommands
+export const extensionMenus = _extensionMenus
+export const commandExtensions = _commandExtensions

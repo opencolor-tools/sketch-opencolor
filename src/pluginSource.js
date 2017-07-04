@@ -1,38 +1,31 @@
 import * as commands from './commands'
 import extensions from './extensions'
 
-
-console.log('EXTENSIONS');
-console.log(extensions);
-
-
 let _extensionCommands = {}
 let _commandExtensions = {}
 let _extensionMenus = []
 
-//build menu and commands for extensions
+// build menu and commands for extensions
 Object.keys(extensions).forEach((extensionIdentifier) => {
-
   let extension = extensions[extensionIdentifier]
 
-    let menu = Object.assign({}, extension.menu)
-    let qualifiedMenuItems = []
+  let menu = Object.assign({}, extension.menu)
+  let qualifiedMenuItems = []
 
-    extension.menu.items.forEach((menuItemTitle) => {
+  extension.menu.items.forEach((menuItemTitle) => {
+      // get qualified command identifier
+    let fullItemTitle = extension.identifier + menuItemTitle
 
-      //get qualified command identifier
-      let fullItemTitle = extension.identifier + menuItemTitle
+      // add command with qualified name
+    _extensionCommands[fullItemTitle] = extension.commands[menuItemTitle]
 
-      //add command with qualified name
-      _extensionCommands[fullItemTitle] = extension.commands[menuItemTitle]
+      // add to menu
+    qualifiedMenuItems.push(fullItemTitle)
+  })
 
-      //add to menu
-      qualifiedMenuItems.push(fullItemTitle)
-    })
+  menu.items = qualifiedMenuItems
 
-    menu.items = qualifiedMenuItems
-
-    _extensionMenus.push(menu)
+  _extensionMenus.push(menu)
 })
 
 export const HKSketchFusionExtension = {
