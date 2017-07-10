@@ -1,3 +1,4 @@
+import log from '../utils/log'
 import { COLOR_TYPES, STYLE_ICONS, getNameLookupForLayer } from '../utils/oco-sketch'
 import { getStyleColor, hexColor } from '../utils/sketch-dom'
 import { notifyTutorial } from '../utils/oco-tutorial'

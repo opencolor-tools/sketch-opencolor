@@ -79,7 +79,8 @@
       "NSComboBox",
       "COSAlertWindow",
       "NSFont",
-      "NSImage"
+      "NSImage",
+      "log"
     ]
   }
 }

@@ -3,18 +3,18 @@ import * as commands from './commands'
 export default {
   identifier: 'enfore',
   menu: {
-    title: 'Enfore Color Config',
+    title: 'Enfore',
     items: [
-      'stats'
+      'example'
     ]
   },
   commands: {
-    stats: {
-      name: 'Stats',
+    example: {
+      name: 'Example',
       shortcut: '',
-      run: commands.stats
+      run: commands.example
     }
   }
 }
 
-export {default as commands} from './commands';
+export {default as commands} from './commands'

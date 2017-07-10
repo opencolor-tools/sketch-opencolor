@@ -1,3 +1,4 @@
+import log from '../utils/log'
 import { SKETCH_PLUGIN_IDENTIFIER, selectOcoFile } from '../utils/oco-sketch'
 import { parentArtboardForObject } from '../utils/sketch-dom'
 

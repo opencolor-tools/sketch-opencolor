@@ -1,3 +1,4 @@
+import log from '../utils/log'
 import { SKETCH_PLUGIN_IDENTIFIER, COLOR_TYPES, getColorLookupForLayer } from '../utils/oco-sketch'
 import { createAlert, createLabel } from '../utils/sketch-ui'
 import { layersWithChildren } from '../utils/sketch-dom'
@@ -42,7 +43,7 @@ export default function swapColor (context) {
   if (searchTerm.indexOf('/') === 0) {
     try {
       searchTerm = new RegExp(searchTerm.replace('/', ''))
-    } catch(e) {
+    } catch (e) {
       context.document.showMessage('Invalid Regular Expression: "' + searchTerm.replace('/', '') + '"')
       return
     }

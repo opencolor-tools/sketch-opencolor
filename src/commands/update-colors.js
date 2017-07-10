@@ -1,3 +1,4 @@
+import log from '../utils/log'
 import { SKETCH_PLUGIN_IDENTIFIER, COLOR_TYPES, getOcoTreeForLayer } from '../utils/oco-sketch'
 import { layersWithChildren, setStyleColor, colorFromHex } from '../utils/sketch-dom'
 

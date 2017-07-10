@@ -1,3 +1,4 @@
+import log from '../utils/log'
 import { getLibFolder, getDefaultPalette } from '../utils/oco-sketch'
 import { createAlert } from '../utils/sketch-ui'
 import { getName } from '../utils/oco'
