@@ -1,2 +1,0 @@
-Put files in this directory you want to be copied to `YourPlugin.sketchplugin/Contents/Resources` output folder.
-This is a help readme, thus you can remove it to avoid copying to the destination plugin bundle.

@@ -1,4 +1,3 @@
-import log from '../utils/log'
 import { SKETCH_PLUGIN_IDENTIFIER, COLOR_TYPES, getColorLookupForLayer } from '../utils/oco-sketch'
 import { createAlert, createLabel } from '../utils/sketch-ui'
 import { layersWithChildren } from '../utils/sketch-dom'

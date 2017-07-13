@@ -1,4 +1,3 @@
-import log from '../utils/log'
 import { arrayify, parentArtboardForObject, getStyleColor } from '../utils/sketch-dom'
 import { SKETCH_PLUGIN_IDENTIFIER, STYLE_TYPES, getLibFolder, openApp } from '../utils/oco-sketch'
 import { createAlert, createLabel, createComboBox } from '../utils/sketch-ui'

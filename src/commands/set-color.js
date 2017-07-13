@@ -1,4 +1,3 @@
-import log from '../utils/log'
 import { SKETCH_PLUGIN_IDENTIFIER, STYLE_TYPES, STYLE_ICONS, getNameLookupForLayer, getLinkedPaletteForObject } from '../utils/oco-sketch'
 import { getStyleColor, arrayify, hexColor } from '../utils/sketch-dom'
 import { getName } from '../utils/oco'

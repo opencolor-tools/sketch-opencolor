@@ -9,7 +9,7 @@ var del = require('del')
 var async = require('async')
 var fse = require('fs-extra')
 var expandTilde = require('expand-tilde')
-var rename = require("gulp-rename")
+var rename = require('gulp-rename')
 
 var release = require('gulp-github-release')
 var zip = require('gulp-zip')
@@ -40,7 +40,6 @@ var ManifestProcessorOptions = {
 var currentManifest = {}
 
 gulp.task('evaluatePluginDefinition', function () {
-
   var pluginDefinitionSource = fs.readFileSync(path.join(__dirname, 'src', ManifestProcessorOptions.scriptFileName), 'utf8')
 
   // create extension menus string
@@ -63,7 +62,6 @@ gulp.task('evaluatePluginDefinition', function () {
 })
 
 gulp.task('cleanPluginDefinition', function () {
-
   fse.remove(path.join(__dirname, 'src', 'pluginDefinition.js'))
 })
 
@@ -89,7 +87,7 @@ gulp.task('clean', function () {
 gulp.task('prepare-manifest', function (callback) {
   var manifest = extractManifestObject()
 
-    // manipulate manifest for sketch
+  // manipulate manifest for sketch
   if (options.target === 'beta') {
     manifest.version = manifest.version + '-beta'
     manifest.identifier = manifest.identifier + '-beta'
@@ -140,13 +138,24 @@ gulp.task('assemble-plugin-resources', function (callback) {
     return name
   }
 
+  Object.keys(pluginDefinition.extensions).map((extensionKey) => {
+    let extension = pluginDefinition.extensions[extensionKey]
+    let sourcePath = path.join(__dirname, 'src/extensions/' + extension.identifier + '/resources')
+    let destPath = path.join(__dirname, 'dist', (currentManifest.bundleName || currentManifest.name) + '.sketchplugin', 'Contents/Resources', extension.identifier)
+    try {
+      fse.removeSync(destPath)
+      fse.copySync(sourcePath, destPath)
+    } catch (e) {
+    }
+  })
+
   return gulp.src('src/resources/**/*.*')
-        .pipe(gulp.dest(path.join(__dirname, 'dist', normalizePluginFileName(currentManifest.bundleName || currentManifest.name) + '.sketchplugin', 'Contents/Resources')))
+  .pipe(gulp.dest(path.join(__dirname, 'dist', normalizePluginFileName(currentManifest.bundleName || currentManifest.name) + '.sketchplugin', 'Contents/Resources')))
 })
 
 gulp.task('install-plugin', function () {
   return gulp.src('dist/**/*.*')
-        .pipe(gulp.dest(SKETCH_PLUGINS_FOLDER))
+  .pipe(gulp.dest(SKETCH_PLUGINS_FOLDER))
 })
 
 gulp.task('build', function (callback) {
@@ -169,9 +178,9 @@ gulp.task('bundle', function () {
   }))
 
   return bundler.bundle()
-        .pipe(source('pluginDefinition.js'))
-        .pipe(rename("plugin.js"))
-        .pipe(gulp.dest('./build/'))
+  .pipe(source('pluginDefinition.js'))
+  .pipe(rename('plugin.js'))
+  .pipe(gulp.dest('./build/'))
 })
 
 gulp.task('watch', function () {
@@ -191,21 +200,21 @@ gulp.task('default', function (callback) {
 
 gulp.task('zip', ['build'], function () {
   return gulp.src('./dist/*.sketchplugin/**/*')
-    .pipe(zip('OpenColor-SketchPlugin.zip'))
-    .pipe(gulp.dest('dist'))
+  .pipe(zip('OpenColor-SketchPlugin.zip'))
+  .pipe(gulp.dest('dist'))
 })
 
 gulp.task('release', ['zip'], function () {
   return gulp.src('./dist/OpenColor-SketchPlugin.zip')
-    .pipe(release({
-      // token: 'token',                     // or you can set an env var called GITHUB_TOKEN instead
-      owner: 'opencolor-tools',                    // if missing, it will be extracted from manifest (the repository.url field)
-      repo: 'sketch-opencolor',            // if missing, it will be extracted from manifest (the repository.url field)
-      // tag: 'v1.0.0',                      // if missing, the version will be extracted from manifest and prepended by a 'v'
-      // name: 'publish-release v1.0.0',     // if missing, it will be the same as the tag
-      // notes: 'very good!',                // if missing it will be left undefined
-      draft: false,                       // if missing it's false
-      prerelease: true,                  // if missing it's false
-      manifest: require('./build/manifest.json') // package.json from which default values will be extracted if they're missing
-    }))
+  .pipe(release({
+    // token: 'token',                     // or you can set an env var called GITHUB_TOKEN instead
+    owner: 'opencolor-tools',                    // if missing, it will be extracted from manifest (the repository.url field)
+    repo: 'sketch-opencolor',            // if missing, it will be extracted from manifest (the repository.url field)
+    // tag: 'v1.0.0',                      // if missing, the version will be extracted from manifest and prepended by a 'v'
+    // name: 'publish-release v1.0.0',     // if missing, it will be the same as the tag
+    // notes: 'very good!',                // if missing it will be left undefined
+    draft: false,                       // if missing it's false
+    prerelease: true,                  // if missing it's false
+    manifest: require('./build/manifest.json') // package.json from which default values will be extracted if they're missing
+  }))
 })

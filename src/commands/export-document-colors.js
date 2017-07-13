@@ -1,4 +1,3 @@
-import log from '../utils/log'
 import { getLibFolder } from '../utils/oco-sketch'
 import { ocoFiles } from '../utils/oco'
 import { createAlert, createComboBox, createLabel } from '../utils/sketch-ui'

@@ -1,4 +1,3 @@
-import log from '../utils/log'
 import { SKETCH_PLUGIN_IDENTIFIER, selectOcoFile } from '../utils/oco-sketch'
 import { ocoCachePath } from '../utils/oco'
 import { arrayify, colorFromHex } from '../utils/sketch-dom'

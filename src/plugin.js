@@ -1,13 +1,13 @@
 import * as commands from './commands'
-import extensions from './extensions'
+import _extensions from './extensions'
 
 let _extensionCommands = {}
 let _commandExtensions = {}
 let _extensionMenus = []
 
 // build menu and commands for extensions
-Object.keys(extensions).forEach((extensionIdentifier) => {
-  let extension = extensions[extensionIdentifier]
+Object.keys(_extensions).forEach((extensionIdentifier) => {
+  let extension = _extensions[extensionIdentifier]
 
   let menu = Object.assign({}, extension.menu)
   let qualifiedMenuItems = []
@@ -24,6 +24,7 @@ Object.keys(extensions).forEach((extensionIdentifier) => {
   })
 
   menu.items = qualifiedMenuItems
+  menu.extensionIdentifier = extension.identifier
 
   _extensionMenus.push(menu)
 })
@@ -161,6 +162,7 @@ export const HKSketchFusionExtension = {
   }
 }
 
+export const extensions = _extensions
 export const extensionCommands = _extensionCommands
 export const extensionMenus = _extensionMenus
 export const commandExtensions = _commandExtensions
