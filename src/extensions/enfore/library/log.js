@@ -1,7 +1,7 @@
 /**
  * Log library
  *
- * Adds better logging functionality.
+ * Provides more transparent way to log to console.
  */
 
 /**
