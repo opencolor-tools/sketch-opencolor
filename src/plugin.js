@@ -13,6 +13,12 @@ Object.keys(_extensions).forEach((extensionIdentifier) => {
   let qualifiedMenuItems = []
 
   extension.menu.items.forEach((menuItemTitle) => {
+    // add menu divider
+    if (menuItemTitle === '-') {
+      qualifiedMenuItems.push('-')
+      return
+    }
+
       // get qualified command identifier
     let fullItemTitle = extension.identifier + menuItemTitle
 
