@@ -1,8 +1,10 @@
-import log from '../../../utils/log'
+/**
+ * Windows library
+ *
+ * Provides functionality to create and manage windows.
+ */
 
-export default function runNative (context) {
-  context.document.showMessage('running native framework')
-
+export default function loadFramework () {
   if (NSClassFromString('NativeFramework') != null) {
     log('already have framework loaded')
   } else {

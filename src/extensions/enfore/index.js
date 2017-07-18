@@ -5,14 +5,14 @@ export default {
   menu: {
     title: 'Enfore',
     items: [
-      'example'
+      'stats'
     ]
   },
   commands: {
-    example: {
-      name: 'Example',
+    stats: {
+      name: 'Stats',
       shortcut: '',
-      run: commands.example
+      run: commands.stats
     }
   }
 }

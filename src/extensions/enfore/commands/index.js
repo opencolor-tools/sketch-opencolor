@@ -1,3 +1,3 @@
-import example from './example'
+import stats from './stats'
 
-export { example }
+export { stats }
