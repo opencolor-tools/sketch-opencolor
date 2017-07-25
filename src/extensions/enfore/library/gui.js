@@ -9,9 +9,9 @@ import Context from './context'
 /**
  * Creates a new alert with a title, message and icon.
  *
- * @param {string} title
- * @param {string} message
- * @param {string} iconFileName
+ * @param {String} title
+ * @param {String} message
+ * @param {String} iconFileName
  * @returns {COSAlertWindow}
  */
 export function createAlert (title, message, iconFileName) {
@@ -34,9 +34,9 @@ export function createAlert (title, message, iconFileName) {
 /**
  * Creates an NSTextField styled as a label.
  *
- * @param {string} text
+ * @param {String} text
  * @param {int} fontSize
- * @param {boolean} bold
+ * @param {Boolean} bold
  * @param {NSRect} frame
  * @returns {NSTextField}
  */
@@ -64,8 +64,8 @@ export function createLabel (text, fontSize, bold, frame) {
 /**
  * Creates an NSButton styled as a checkbox.
  *
- * @param {string} text
- * @param {boolean} checked
+ * @param {String} text
+ * @param {Boolean} checked
  * @param {NSRect} frame
  * @returns {NSButton}
  */

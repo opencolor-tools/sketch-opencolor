@@ -46,6 +46,10 @@
       "src/vendor/"
     ],
     "globals": [
+      "NSOKButton",
+      "NSUserName",
+      "NSOpenPanel",
+      "NSSelectorFromString",
       "MSSymbolInstance",
       "MSSymbolMaster",
       "MSLayerGroup",

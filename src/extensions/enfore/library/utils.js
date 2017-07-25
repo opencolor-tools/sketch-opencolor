@@ -63,9 +63,9 @@
 /**
  * Substitutes the placeholders in the string using the provided values.
  *
- * @param {string} string - String with placeholders in the {placeholder} format.
+ * @param {String} string - String with placeholders in the {placeholder} format.
  * @param {Object} values - Object with values to substitute for placeholders.
- * @returns {string} - String with placeholders substituted for values.
+ * @returns {String} - String with placeholders substituted for values.
  */
  export function mergeStringWithValues (string, values) {
   // get properties in values
@@ -89,7 +89,7 @@
 /**
  * Parses the string and returns the value of the correct type.
  *
- * @param {string} value
+ * @param {String} value
  * @returns {*}
  */
  export function parsePrimitives (value) {
