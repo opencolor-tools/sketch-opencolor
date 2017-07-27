@@ -4,6 +4,35 @@
  * Provides functionality to work with colors.
  */
 
+import PALETTE from './PALETTE'
+
+// prepare colors
+let semanticColors = null
+
+/**
+ * Retrieves the semantic color for the specified hex string.
+ *
+ * @param {String} hex
+ * @return {Object}
+ */
+export function hexToSemanticColor (hex) {
+  if (!semanticColors) {
+    semanticColors = {}
+    PALETTE.colorGroups.forEach(function (colorGroup) {
+      Object.keys(colorGroup.shades).forEach(function (shade) {
+        let key = '#' + colorGroup.shades[shade].toUpperCase()
+        semanticColors[key] = {
+          displayName: colorGroup.name + '' + shade,
+          groupName: colorGroup.name,
+          colorName: shade
+        }
+      })
+    })
+  }
+
+  return semanticColors[hex]
+}
+
 /**
  * Converts MSColor instance to a hex string.
  *
