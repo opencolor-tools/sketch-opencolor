@@ -90,33 +90,3 @@ export function rgbToHex (r, g, b) {
 export function getAlpha (color) {
   return Math.round(color.alpha() * 100)
 }
-
-// ===============================================
-
-// var visualNameLookup = {}
-//
-// COLORS.colorGroups.forEach(function (colorGroup) {
-//   Object.keys(colorGroup.shades).forEach(function (shade) {
-//     var hex = '#' + colorGroup.shades[shade].toUpperCase()
-//     visualNameLookup[hex] = {
-//       displayName: colorGroup.name + '' + shade,
-//       groupName: colorGroup.name,
-//       colorName: shade
-//     }
-//   })
-// })
-//
-// var meaningfulColors = {}
-//
-// function getVisualColorName (colorValue) {
-//   colorValue = colorValue.replace('##', '#')
-//   var info = visualNameLookup[colorValue] || null
-//   if (!info) {
-//     return null
-//   }
-//   return info.displayName
-// }
-//
-// function getVisualColorInfo (colorValue) {
-//   return visualNameLookup[colorValue] || null
-// }
