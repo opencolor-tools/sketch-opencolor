@@ -176,7 +176,7 @@ gulp.task('release', ['zip'], function() {
       //tag: 'v1.0.0',                      // if missing, the version will be extracted from manifest and prepended by a 'v'
       //name: 'publish-release v1.0.0',     // if missing, it will be the same as the tag
       //notes: 'very good!',                // if missing it will be left undefined
-      draft: false,                       // if missing it's false
+      draft: true,                       // if missing it's false
       prerelease: true,                  // if missing it's false
       manifest: require('./build/manifest.json') // package.json from which default values will be extracted if they're missing
     }));

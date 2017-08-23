@@ -46,7 +46,12 @@ function getStyle (layer, styleType) {
   if (style[styleType]) {
     return style[styleType]()
   } else if (style[styleType + 's']) {
-    return style[styleType + 's']()[0]
+    if (style[styleType + 's']().length > 0) {
+      return style[styleType + 's']()[0]
+    } else {
+      return null
+    }
+
   }
   return null
 }
@@ -83,10 +88,21 @@ export function getStyleColor (layer, styleType) {
 
 export function setStyleColor (layer, styleType, hexValue) {
   var style = layer.style()
+  var specificStyle = null
   if (!style[styleType]) {
+    if (style[styleType + 's']) {
+      if (style[styleType + 's']().length > 0) {
+        specificStyle = style[styleType + 's']()[0]
+      }
+    }
+  } else {
+    specificStyle = style[styleType]()
+  }
+  if (specificStyle) {
+    specificStyle.color = colorFromHex(hexValue)
+  } else {
     return null
   }
-  style[styleType]().color = colorFromHex(hexValue)
 }
 
 export function findLayersInLayer (rootLayer, name, exactMatch, type, subLayersOnly, layersToExclude) {
