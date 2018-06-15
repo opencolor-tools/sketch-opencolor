@@ -1,3 +1,9 @@
+/*
+
+  DEPRECATED
+
+ */
+
 import { arrayify, parentArtboardForObject, getStyleColor } from '../utils/sketch-dom'
 import { SKETCH_PLUGIN_IDENTIFIER, STYLE_TYPES, getLibFolder, openApp } from '../utils/oco-sketch'
 import { createAlert, createLabel, createComboBox } from '../utils/sketch-ui'
@@ -33,7 +39,7 @@ export default function exportFromArtboard (context) {
     return
   }
 
-  var rootName = artboard.name();
+  var rootName = artboard.name()
   var cachedPalettePath = command.valueForKey_onLayer_forPluginIdentifier('ocoPalette', artboard, SKETCH_PLUGIN_IDENTIFIER)
 
   if (!cachedPalettePath) {
@@ -45,7 +51,7 @@ export default function exportFromArtboard (context) {
   var ocoPalette = new Entry()
 
   var children = artboard.children()
-  context.document.showMessage("children")
+  context.document.showMessage('children')
 
   if (hasMSArray()) {
     children = arrayify(children).reverse()

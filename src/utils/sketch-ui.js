@@ -11,7 +11,7 @@ export function createComboBox (items, selectedIndex, frame, pullsDown) {
   select.completes = true
 
   select.addItemsWithObjectValues(items)
-  select.selectItemAtIndex(selectedIndex)
+  if (items.length) select.selectItemAtIndex(selectedIndex)
   return select
 }
 
@@ -37,11 +37,17 @@ export function createLabel (text, frame, fontSize, bold) {
     label.setFont(NSFont.systemFontOfSize(fontSize))
   }
 
-
   label.setBezeled(false)
   label.setDrawsBackground(false)
   label.setEditable(false)
   label.setSelectable(false)
 
   return label
+}
+
+export function createTextField (text, frame) {
+  var textField = NSTextField.alloc().initWithFrame(frame)
+  textField.setStringValue(text)
+
+  return textField
 }

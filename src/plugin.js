@@ -4,9 +4,9 @@ export const HKSketchFusionExtension = {
   name: 'Open Color',
   bundleName: 'opencolortools',
   description: 'Use Open Color in Sketch',
-  author: 'Jan Krutisch, Florian Munz, Michael Schieben',
+  author: 'Jan Krutisch, Florian Munz, Michael Schieben, Lukas Ondrej',
   authorEmail: 'info@opencolor.tools',
-  version: '1.8.7',
+  version: '1.9.1',
   identifier: 'tools.opencolor.sketch.opencolor',
   menu: {
     'isRoot': false,
@@ -36,8 +36,9 @@ export const HKSketchFusionExtension = {
       {
         title: 'Composition',
         items: [
-          'importAsArtboard',
-          'exportFromArtboard'
+          'setMetadata',
+          'importPalette',
+          'exportPalette'
         ]
       },
       'settings',
@@ -58,15 +59,20 @@ export const HKSketchFusionExtension = {
       shortcut: '',
       run: commands.exportDocumentColors
     },
-    importAsArtboard: {
+    setMetadata: {
+      name: 'Set Metadata',
+      shortcut: '',
+      run: commands.setMetadata
+    },
+    importPalette: {
       name: 'Import Palette',
       shortcut: '',
-      run: commands.importAsArtboard
+      run: commands.importPalette
     },
-    exportFromArtboard: {
+    exportPalette: {
       name: 'Export Palette',
       shortcut: '',
-      run: commands.exportFromArtboard
+      run: commands.exportPalette
     },
     linkArtboard: {
       name: 'Link Artboard to Palette',
